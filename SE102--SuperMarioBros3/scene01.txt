@@ -5,6 +5,7 @@ brick.txt
 coin.txt
 goomba.txt
 cloud.txt
+koopas.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -54,6 +55,9 @@ cloud.txt
 
 #Goomba
 2	300	10
+
+#KOOPAS
+3	100	10
 
 #Platform
 5	90	136	16	15	16	51000	52000	53000

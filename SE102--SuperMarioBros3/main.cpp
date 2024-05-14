@@ -32,7 +32,7 @@ HOW TO INSTALL Microsoft.DXSDK.D3DX
 #include "Textures.h"
 #include "Animation.h"
 #include "Animations.h"
-
+#include "Koopas.h"
 #include "Mario.h"
 #include "Brick.h"
 #include "Goomba.h"
