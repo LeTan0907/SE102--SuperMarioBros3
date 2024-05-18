@@ -1,6 +1,6 @@
 #include "Koopas.h"
-
-
+#include "Goomba.h"
+#include "debug.h"
 CKoopas::CKoopas(float x, float y) : CGameObject(x, y)
 {
     this->ax = 0;
@@ -36,8 +36,12 @@ void CKoopas::OnNoCollision(DWORD dt)
 void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 {
     if (!e->obj->IsBlocking()) return;
-    if (dynamic_cast<CKoopas*>(e->obj)) return;
-
+    
+    if (dynamic_cast<CGoomba*>(e->obj))
+    {
+        OnCollisionWithGoomba(e);
+        DebugOut(L">>> Hit something>>> \n");
+    }
     if (e->ny != 0)
     {
         vy = 0;
@@ -46,6 +50,7 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
     {
         vx = -vx;
     }
+    
 }
 
 void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -65,7 +70,12 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CKoopas::Render()
 {
-    int aniId = ID_ANI_KOOPAS_WALKING;
+    int aniId = ID_ANI_KOOPAS_WALKING_LEFT;
+    if (state == ID_ANI_KOOPAS_WALKING_RIGHT)
+    {
+        
+        aniId = ID_ANI_KOOPAS_WALKING_RIGHT;
+    }
     if (state == KOOPAS_STATE_DIE)
     {
         aniId = ID_ANI_KOOPAS_DIE;
@@ -80,8 +90,27 @@ void CKoopas::Render()
     }
 
     CAnimations::GetInstance()->Get(aniId)->Render(x, y);
-    RenderBoundingBox();
 }
+void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
+{
+    CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+    if (goomba == nullptr)
+    {
+        // Ensure the cast was successful
+        return;
+    }
+
+    // Only handle collision if Koopas is in the moving shell state
+    if (state != KOOPAS_STATE_WALKING&&!KOOPAS_STATE_DIE&&KOOPAS_STATE_SHELL)
+    {
+        // If the Goomba is not already dying, set its state to dying
+        if (goomba->GetState() != GOOMBA_STATE_DIE)
+        {
+            goomba->SetState(GOOMBA_STATE_DIE);
+        }
+    }
+}
+
 
 void CKoopas::SetState(int state)
 {
@@ -92,7 +121,7 @@ void CKoopas::SetState(int state)
         die_start = GetTickCount64();
         y += (KOOPAS_BBOX_HEIGHT - KOOPAS_BBOX_HEIGHT_SHELL) / 2;
         vx = 0;
-        vy = 0;
+        vy = -0.3f;
         ay = 0;
         break;
     case KOOPAS_STATE_WALKING:

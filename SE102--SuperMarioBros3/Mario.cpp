@@ -7,7 +7,7 @@
 #include "Goomba.h"
 #include "Coin.h"
 #include "Portal.h"
-
+#include "Koopas.h"
 #include "Collision.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
@@ -54,6 +54,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithCoin(e);
 	else if (dynamic_cast<CPortal*>(e->obj))
 		OnCollisionWithPortal(e);
+	else if (dynamic_cast<CKoopas*>(e->obj))
+		OnCollisionWithKoopas(e);
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -74,6 +76,55 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 		if (untouchable == 0)
 		{
 			if (goomba->GetState() != GOOMBA_STATE_DIE)
+			{
+				if (level > MARIO_LEVEL_SMALL)
+				{
+					level = MARIO_LEVEL_SMALL;
+					StartUntouchable();
+				}
+				else
+				{
+					DebugOut(L">>> Mario DIE >>> \n");
+					SetState(MARIO_STATE_DIE);
+				}
+			}
+		}
+	}
+}
+void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
+{
+	CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
+
+	// Check for valid Koopas object
+	if (!koopas) return;
+
+	// Jump on top of Koopas
+	if (e->ny < 0)
+	{
+		if (koopas->GetState() == KOOPAS_STATE_WALKING)
+		{
+			koopas->SetState(KOOPAS_STATE_SHELL);
+			DebugOut(L">> Koopas Shell >>> \n");
+			vy = -MARIO_JUMP_DEFLECT_SPEED;
+		}
+		else if (koopas->GetState() == KOOPAS_STATE_SHELL)
+		{
+			koopas->SetState(KOOPAS_STATE_SHELL_MOVING);
+			DebugOut(L">>> Koopas Shell Moving >>> \n");
+			vy = -MARIO_JUMP_DEFLECT_SPEED;
+		}
+		else if (koopas->GetState() == KOOPAS_STATE_SHELL_MOVING)
+		{
+			koopas->SetState(KOOPAS_STATE_DIE);
+			DebugOut(L">>> Koopas Die >>> \n");
+			vy = -MARIO_JUMP_DEFLECT_SPEED;
+		}
+	}
+	else // Mario is hit by Koopas
+	{
+		if (untouchable == 0)
+		{
+			if (koopas->GetState() != KOOPAS_STATE_DIE)
 			{
 				if (level > MARIO_LEVEL_SMALL)
 				{

@@ -13,7 +13,8 @@
 #define KOOPAS_STATE_SHELL_MOVING 300
 #define KOOPAS_STATE_DIE 400
 
-#define ID_ANI_KOOPAS_WALKING 6000
+#define ID_ANI_KOOPAS_WALKING_LEFT 6000
+#define ID_ANI_KOOPAS_WALKING_RIGHT 6100
 #define ID_ANI_KOOPAS_SHELL 6001
 #define ID_ANI_KOOPAS_SHELL_MOVING 6002
 #define ID_ANI_KOOPAS_DIE 6003
@@ -35,7 +36,7 @@ protected:
     virtual int IsCollidable() { return 1; }
     virtual int IsBlocking() { return 0; }
     virtual void OnNoCollision(DWORD dt);
-
+    void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
     virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 
 public:

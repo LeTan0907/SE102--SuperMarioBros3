@@ -1,5 +1,5 @@
 #include "Goomba.h"
-
+#include "Koopas.h"
 CGoomba::CGoomba(float x, float y):CGameObject(x, y)
 {
 	this->ax = 0;
@@ -62,7 +62,6 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 
-
 void CGoomba::Render()
 {
 	int aniId = ID_ANI_GOOMBA_WALKING;
@@ -72,7 +71,6 @@ void CGoomba::Render()
 	}
 
 	CAnimations::GetInstance()->Get(aniId)->Render(x,y);
-	RenderBoundingBox();
 }
 
 void CGoomba::SetState(int state)

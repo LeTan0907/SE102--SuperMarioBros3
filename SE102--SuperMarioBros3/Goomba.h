@@ -34,7 +34,6 @@ protected:
 	virtual void OnNoCollision(DWORD dt);
 
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
-
 public: 	
 	CGoomba(float x, float y);
 	virtual void SetState(int state);
