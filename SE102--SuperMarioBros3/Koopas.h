@@ -12,13 +12,15 @@
 #define KOOPAS_STATE_SHELL 200
 #define KOOPAS_STATE_SHELL_MOVING 300
 #define KOOPAS_STATE_DIE 400
+#define KOOPAS_REVIVE_TIMEOUT 10000
+#define KOOPAS_DIE_TIMEOUT 3004
 
 #define ID_ANI_KOOPAS_WALKING_LEFT 6000
 #define ID_ANI_KOOPAS_WALKING_RIGHT 6100
 #define ID_ANI_KOOPAS_SHELL 6001
 #define ID_ANI_KOOPAS_SHELL_MOVING 6002
 #define ID_ANI_KOOPAS_DIE 6003
-#define KOOPAS_DIE_TIMEOUT 6004
+#define ID_ANI_KOOPAS_DIE_RETURN 6004
 
 
 class CKoopas : public CGameObject
@@ -26,9 +28,9 @@ class CKoopas : public CGameObject
 protected:
     float ax;
     float ay;
-
+    bool isHold;
     ULONGLONG die_start;
-
+    ULONGLONG shell_start;
     virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
     virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
     virtual void Render();

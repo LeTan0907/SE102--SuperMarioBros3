@@ -3,7 +3,7 @@
 
 #include "Mario.h"
 #include "Game.h"
-
+#include "QuestionBox.h"
 #include "Goomba.h"
 #include "Coin.h"
 #include "Portal.h"
@@ -140,7 +140,11 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 		}
 	}
 }
+void CMario::OnCollisionWithQuestionBox(LPCOLLISIONEVENT e)
+{
+	CQuestionBox* p = (CQuestionBox*)e->obj;
 
+}
 void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
 {
 	e->obj->Delete();

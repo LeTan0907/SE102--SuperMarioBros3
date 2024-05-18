@@ -1,11 +1,13 @@
 #include "Koopas.h"
 #include "Goomba.h"
 #include "debug.h"
+
 CKoopas::CKoopas(float x, float y) : CGameObject(x, y)
 {
     this->ax = 0;
     this->ay = KOOPAS_GRAVITY;
     die_start = -1;
+    shell_start = -1; // Initialize shell start time
     SetState(KOOPAS_STATE_WALKING);
 }
 
@@ -36,12 +38,13 @@ void CKoopas::OnNoCollision(DWORD dt)
 void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 {
     if (!e->obj->IsBlocking()) return;
-    
+
     if (dynamic_cast<CGoomba*>(e->obj))
     {
         OnCollisionWithGoomba(e);
-        DebugOut(L">>> Hit something>>> \n");
+        DebugOut(L">>> Hit Goomba >>> \n");
     }
+
     if (e->ny != 0)
     {
         vy = 0;
@@ -50,7 +53,6 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
     {
         vx = -vx;
     }
-    
 }
 
 void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -58,10 +60,16 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
     vy += ay * dt;
     vx += ax * dt;
 
-    if ((state == KOOPAS_STATE_DIE) && (GetTickCount64() - die_start > KOOPAS_DIE_TIMEOUT))
+    if (state == KOOPAS_STATE_DIE && GetTickCount64() - die_start > KOOPAS_DIE_TIMEOUT)
     {
         isDeleted = true;
         return;
+    }
+
+    if (state == KOOPAS_STATE_SHELL && GetTickCount64() - shell_start > KOOPAS_REVIVE_TIMEOUT)
+    {
+        SetState(KOOPAS_STATE_WALKING);
+        y -= (KOOPAS_BBOX_HEIGHT - KOOPAS_BBOX_HEIGHT_SHELL) / 2; // Reset position to avoid falling through the ground
     }
 
     CGameObject::Update(dt, coObjects);
@@ -71,9 +79,9 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void CKoopas::Render()
 {
     int aniId = ID_ANI_KOOPAS_WALKING_LEFT;
-    if (state == ID_ANI_KOOPAS_WALKING_RIGHT)
+
+    if (vx > 0)
     {
-        
         aniId = ID_ANI_KOOPAS_WALKING_RIGHT;
     }
     if (state == KOOPAS_STATE_DIE)
@@ -91,6 +99,7 @@ void CKoopas::Render()
 
     CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 }
+
 void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 {
     CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
@@ -101,7 +110,7 @@ void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
     }
 
     // Only handle collision if Koopas is in the moving shell state
-    if (state != KOOPAS_STATE_WALKING&&!KOOPAS_STATE_DIE&&KOOPAS_STATE_SHELL)
+    if (state == KOOPAS_STATE_SHELL_MOVING)
     {
         // If the Goomba is not already dying, set its state to dying
         if (goomba->GetState() != GOOMBA_STATE_DIE)
@@ -110,7 +119,6 @@ void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
         }
     }
 }
-
 
 void CKoopas::SetState(int state)
 {
@@ -126,12 +134,19 @@ void CKoopas::SetState(int state)
         break;
     case KOOPAS_STATE_WALKING:
         vx = -KOOPAS_WALKING_SPEED;
+        ax = 0;
+        ay = KOOPAS_GRAVITY;
         break;
     case KOOPAS_STATE_SHELL:
+        shell_start = GetTickCount64(); // Start the shell timer
         vx = 0;
+        ax = 0;
+        ay = KOOPAS_GRAVITY;
         break;
     case KOOPAS_STATE_SHELL_MOVING:
         vx = KOOPAS_SHELL_SPEED;
+        ax = 0;
+        ay = KOOPAS_GRAVITY;
         break;
     }
 }
