@@ -24,4 +24,5 @@ public:
     void GetBoundingBox(float& left, float& top, float& right, float& bottom);
     void OnNoCollision(DWORD dt);
     void OnCollisionWith(LPCOLLISIONEVENT e);
+   
 };

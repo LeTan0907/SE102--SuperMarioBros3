@@ -49,3 +49,5 @@ redmushroom.txt
 50	200	160	216	180	1
 #Mushroom
 9	220	100
+#QuestionBox
+8	180	100

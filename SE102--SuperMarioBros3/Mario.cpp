@@ -58,6 +58,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithKoopas(e);
 	else if (dynamic_cast<CRedMushroom*>(e->obj))
 		OnCollisionWithRedMushroom(e);
+	else if (dynamic_cast<CQuestionBox*>(e->obj))
+		OnCollisionWithQuestionBox(e);
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -144,8 +146,17 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 }
 void CMario::OnCollisionWithQuestionBox(LPCOLLISIONEVENT e)
 {
-	CQuestionBox* p = dynamic_cast<CQuestionBox*>(e->obj);
+	CQuestionBox* questionBox = dynamic_cast<CQuestionBox*>(e->obj);
 
+	if (questionBox)
+	{
+		// Check if the collision occurs from below the question box
+		if (e->ny > 0)
+		{
+			questionBox->SetState(STATE_USED); // Mark the question box as used
+			questionBox->SpawnMushroom();
+		}
+	}
 }
 
 void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
