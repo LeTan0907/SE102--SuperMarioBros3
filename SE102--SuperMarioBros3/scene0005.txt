@@ -7,6 +7,7 @@ brick.txt
 koopas.txt
 questionbox.txt
 ground.txt
+redmushroom.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -47,4 +48,4 @@ ground.txt
 #Portal 
 50	200	160	216	180	1
 
-8	200	180
+9	220	100
