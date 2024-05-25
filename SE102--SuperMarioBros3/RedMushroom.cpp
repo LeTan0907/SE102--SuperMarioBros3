@@ -49,6 +49,9 @@ void CRedMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CRedMushroom::Render()
 {
-    LPTEXTURE texture = CTextures::GetInstance()->Get(ID_ANI_REDMUSHROOM);
-    CGame::GetInstance()->Draw(x, y, texture);
+    CAnimations* animations = CAnimations::GetInstance();
+    animations->Get(ID_ANI_REDMUSHROOM)->Render(x, y);
+
+    // Uncomment the line below to render the bounding box for debugging
+    //RenderBoundingBox();
 }

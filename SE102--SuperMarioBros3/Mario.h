@@ -108,17 +108,18 @@ class CMario : public CGameObject
 	float ax;				// acceleration on x 
 	float ay;				// acceleration on y 
 
-	int level; 
-	int untouchable; 
+	int level;
+	int untouchable;
 	ULONGLONG untouchable_start;
 	BOOLEAN isOnPlatform;
-	int coin; 
+	int coin;
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
 	void OnCollisionWithPortal(LPCOLLISIONEVENT e);
 	void OnCollisionWithKoopas(LPCOLLISIONEVENT e);
 	void OnCollisionWithQuestionBox(LPCOLLISIONEVENT e);
+	void OnCollisionWithRedMushroom(LPCOLLISIONEVENT e);
 	int GetAniIdBig();
 	int GetAniIdSmall();
 
@@ -128,7 +129,7 @@ public:
 		isSitting = false;
 		maxVx = 0.0f;
 		ax = 0.0f;
-		ay = MARIO_GRAVITY; 
+		ay = MARIO_GRAVITY;
 
 		level = MARIO_LEVEL_SMALL;
 		untouchable = 0;
@@ -141,11 +142,11 @@ public:
 	void SetState(int state);
 
 	int IsCollidable()
-	{ 
-		return (state != MARIO_STATE_DIE); 
+	{
+		return (state != MARIO_STATE_DIE);
 	}
 
-	int IsBlocking() { return (state != MARIO_STATE_DIE && untouchable==0); }
+	int IsBlocking() { return (state != MARIO_STATE_DIE && untouchable == 0); }
 
 	void OnNoCollision(DWORD dt);
 	void OnCollisionWith(LPCOLLISIONEVENT e);
