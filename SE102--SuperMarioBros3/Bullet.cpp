@@ -10,37 +10,38 @@ CBullet::CBullet(float x, float y) : CGameObject(x, y)
     this->vy = 0.0f;
     SetState(BULLET_STATE_FIRING);
 }
+void CBullet::CalculateDirection(float targetX, float targetY)
+{
+    // Calculate direction towards the target
+    float dx = targetX - x;
+    float dy = targetY - y;
+    float length = sqrt(dx * dx + dy * dy);
 
+    // Check if the target is within range
+    if (length > 0)
+    {
+        // Normalize direction vector
+        dx /= length;
+        dy /= length;
+
+        // Set velocity towards the target
+        vx = BULLET_FIRING_SPEED * dx;
+        vy = BULLET_FIRING_SPEED * dy;
+    }
+    else
+    {
+        // Stop moving if the target is out of range
+        vx = 0;
+        vy = 0;
+    }
+}
 void CBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
     CGameObject::Update(dt, coObjects);
-
-    // Find Mario
-    CMario* mario = nullptr;
-    CPlayScene* currentScene = dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene());
-    if (currentScene)
-    {
-        for (auto obj : currentScene->GetObjects())
-        {
-            mario = dynamic_cast<CMario*>(obj);
-            if (mario) break;
-        }
-    }
-
-    if (mario)
-    {
-        float marioX, marioY;
-        mario->GetPosition(marioX, marioY);
-        float dx = marioX - x;
-        float dy = marioY - y;
-        float length = sqrt(dx * dx + dy * dy);
-        vx = BULLET_FIRING_SPEED * (dx / length);
-        vy = BULLET_FIRING_SPEED * (dy / length);
-    }
-
     x += vx * dt;
     y += vy * dt;
 }
+
 
 void CBullet::Render()
 {
@@ -59,9 +60,10 @@ void CBullet::SetState(int state)
 }
 
 // Method to spawn bullet
-void FireBullet(float x, float y)
+void FireBullet(float x, float y, float targetX, float targetY)
 {
     CBullet* bullet = new CBullet(x, y);
+    bullet->CalculateDirection(targetX, targetY); // Calculate direction towards the target
     CPlayScene* currentScene = dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene());
     if (currentScene)
     {
