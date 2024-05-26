@@ -78,13 +78,19 @@
     <ClCompile Include="Koopas.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Ground.cpp">
+    <ClCompile Include="ColorPlatform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="QuestionBox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RedMushroom.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PakkkunFlower.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -161,13 +167,19 @@
     <ClInclude Include="Koopas.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Ground.h">
+    <ClInclude Include="ColorPlatform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="QuestionBox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RedMushroom.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PakkunFlower.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

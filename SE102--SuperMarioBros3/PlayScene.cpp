@@ -11,9 +11,11 @@
 #include "Platform.h"
 #include "Koopas.h"
 #include "SampleKeyEventHandler.h"
-#include "Ground.h"
+#include "ColorPlatform.h"
 #include "QuestionBox.h"
 #include "RedMushroom.h"
+#include "PakkunFlower.h"
+#include "Bullet.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -124,6 +126,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_COIN: obj = new CCoin(x, y); break;
 	case OBJECT_TYPE_KOOPAS: obj = new CKoopas(x, y); break;
 	case OBJECT_TYPE_REDMUSHROOM: obj = new CRedMushroom(x, y); break;
+	case OBJECT_TYPE_BULLET: obj = new CBullet(x, y); break;
+	case OBJECT_TYPE_PAKKUN: obj = new CPakkunFlower(x, y); break;
 	case OBJECT_TYPE_PLATFORM:
 	{
 

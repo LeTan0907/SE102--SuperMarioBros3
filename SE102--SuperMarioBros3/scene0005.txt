@@ -8,6 +8,8 @@ koopas.txt
 questionbox.txt
 ground.txt
 redmushroom.txt
+bullet.txt
+pakkun.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -51,3 +53,7 @@ redmushroom.txt
 9	220	100
 #QuestionBox
 8	180	100
+#
+10	160	90
+#
+6	160	90

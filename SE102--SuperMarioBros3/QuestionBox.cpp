@@ -35,6 +35,5 @@ void CQuestionBox::SpawnMushroom()
     float mushroomX = x;
     float mushroomY = y - RED_MUSHROOM_BBOX_HEIGHT; // Adjust position so mushroom spawns just above the box
     CRedMushroom* mushroom = new CRedMushroom(mushroomX, mushroomY);
-    mushroom->Render();
 }
 
