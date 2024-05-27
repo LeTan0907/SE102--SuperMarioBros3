@@ -1,5 +1,7 @@
 # id	left	top	right	bottom	texture_id
 [SPRITES]
+#EMPTY
+0	0	0	0	0	20
 #CLOUD
 1	715	1	730	16	30
 2	732	1	747	16	30
