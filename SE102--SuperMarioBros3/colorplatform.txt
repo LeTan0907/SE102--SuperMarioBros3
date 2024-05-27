@@ -1,0 +1,9 @@
+# id	left	top	right	bottom	texture_id
+[SPRITES]
+#PINK
+15100	919	137	934	152	30
+15101	936	137	951	152	30
+15102	953	137	968	152	30
+#BLUE
+# ani_id	sprite1_id	time1	sprite2_id	time2	...
+[ANIMATIONS]

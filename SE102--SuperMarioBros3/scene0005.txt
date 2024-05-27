@@ -10,6 +10,7 @@ ground.txt
 redmushroom.txt
 bullet.txt
 pakkun.txt
+colorplatform.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -47,6 +48,7 @@ pakkun.txt
 #Platform
 5 	100	180	16	15	32	51000	52000	53000
 5	140	140	16	15	26	51000	52000	53000
+7	180	100	16	15	32	15100	15101	15102
 #Portal 
 50	200	160	216	180	1
 #Mushroom
@@ -54,6 +56,3 @@ pakkun.txt
 #QuestionBox
 8	180	100
 #
-10	80	90
-#
-6	160	90
