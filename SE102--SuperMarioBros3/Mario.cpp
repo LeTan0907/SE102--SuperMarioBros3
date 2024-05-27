@@ -124,11 +124,17 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
 		}
 	}
+
+	else if (e->nx != 0 && koopas->GetState() == KOOPAS_STATE_SHELL)
+	{
+	koopas->SetState(KOOPAS_STATE_SHELL_MOVING);
+	koopas->SetSpeed(nx * KOOPAS_SHELL_SPEED, 0);
+	}
 	else // Mario is hit by Koopas
 	{
 		if (untouchable == 0)
 		{
-			if (koopas->GetState() != KOOPAS_STATE_DIE)
+			if (koopas->GetState() != KOOPAS_STATE_DIE && koopas->GetState() != KOOPAS_STATE_SHELL)
 			{
 				if (level > MARIO_LEVEL_SMALL)
 				{
