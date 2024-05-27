@@ -105,14 +105,10 @@ void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
     CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
     if (goomba == nullptr)
     {
-        // Ensure the cast was successful
         return;
     }
-
-    // Only handle collision if Koopas is in the moving shell state
-    if (state == KOOPAS_STATE_SHELL_MOVING)
+    if (GetState() == KOOPAS_STATE_SHELL_MOVING)
     {
-        // If the Goomba is not already dying, set its state to dying
         if (goomba->GetState() != GOOMBA_STATE_DIE)
         {
             goomba->SetState(GOOMBA_STATE_DIE);

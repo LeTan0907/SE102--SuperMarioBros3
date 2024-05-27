@@ -5,4 +5,3 @@
 33003	477	154	492	169	30
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
-7000	33001	1000
