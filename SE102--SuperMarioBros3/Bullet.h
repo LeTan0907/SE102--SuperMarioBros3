@@ -29,5 +29,4 @@ protected:
 public:
 	CBullet(float x, float y);
 	virtual void SetState(int state);
-	void CalculateDirection(float targetX, float targetY);
 };

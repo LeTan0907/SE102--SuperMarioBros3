@@ -21,7 +21,7 @@ class CPakkunFlower : public CGameObject
 protected:
     float ax;
     float ay;
-
+    DWORD lastShotTime = 0;
     DWORD shoot_start = 0;
     bool isShooting = false;
 
