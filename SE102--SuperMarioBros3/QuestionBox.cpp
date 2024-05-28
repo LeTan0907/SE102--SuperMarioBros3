@@ -1,7 +1,8 @@
 #include "QuestionBox.h"
 #include "Animations.h"
 #include "RedMushroom.h"
-
+#include "PlayScene.h"
+#include "Coin.h"
 void CQuestionBox::Render() {
     int aniId = ID_ANI_QUESTIONBOX_ORIGIN;
     if (state == STATE_USED) {
@@ -29,11 +30,20 @@ void CQuestionBox::SetState(int state) {
         break;
     }
 }
-void CQuestionBox::SpawnMushroom()
-{
-    // Create a new red mushroom instance and add it to the objects list
-    float mushroomX = x;
-    float mushroomY = y - RED_MUSHROOM_BBOX_HEIGHT; // Adjust position so mushroom spawns just above the box
-    CRedMushroom* mushroom = new CRedMushroom(mushroomX, mushroomY);
-}
+void CQuestionBox::SpawnReward() {
+    CGameObject* rewardObject = nullptr;
+    if (reward == 0) {
+        rewardObject = new CCoin(x, y - QSB_BBOX_HEIGHT);
+        if (GetTickCount64() - COIN_SPAWN ==0) {
+            rewardObject->Delete();
+        }// Spawn a coin
+    }
+    else if (reward == 1) {
+        rewardObject = new CRedMushroom(x, y - QSB_BBOX_HEIGHT); // Spawn a mushroom
+    }
 
+    if (rewardObject) {
+        CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+        scene->AddObject(rewardObject);
+    }
+}

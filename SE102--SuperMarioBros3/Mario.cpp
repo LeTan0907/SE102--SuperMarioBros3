@@ -150,17 +150,16 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 		}
 	}
 }
-void CMario::OnCollisionWithQuestionBox(LPCOLLISIONEVENT e)
-{
+void CMario::OnCollisionWithQuestionBox(LPCOLLISIONEVENT e) {
 	CQuestionBox* questionBox = dynamic_cast<CQuestionBox*>(e->obj);
 
-	if (questionBox)
-	{
+	if (questionBox) {
 		// Check if the collision occurs from below the question box
-		if (e->ny > 0)
-		{
-			questionBox->SetState(STATE_USED); // Mark the question box as used
-			questionBox->SpawnMushroom();
+		if (e->ny > 0) {
+			if (questionBox->GetState() == STATE_ORIGIN) {
+				questionBox->SpawnReward();
+				questionBox->SetState(STATE_USED);
+			}
 		}
 	}
 }

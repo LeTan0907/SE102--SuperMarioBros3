@@ -55,7 +55,7 @@ background.txt
 #Mushroom
 9	220	100
 #QuestionBox
-8	100	100
+8	100	100	1
 #BACKGROUND
 60	140	16	16	15	3	1	2	3
 60	140	32	16	15	3	4	5	6
