@@ -1,7 +1,7 @@
 #include "Koopas.h"
 #include "Goomba.h"
 #include "debug.h"
-
+#include "EdgeChecker.h"
 CKoopas::CKoopas(float x, float y) : CGameObject(x, y)
 {
     this->ax = 0;
@@ -38,13 +38,7 @@ void CKoopas::OnNoCollision(DWORD dt)
 void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 {
     if (!e->obj->IsBlocking()) return;
-
-    if (dynamic_cast<CGoomba*>(e->obj))
-    {
-        OnCollisionWithGoomba(e);
-        DebugOut(L">>> Hit Goomba >>> \n");
-    }
-
+    
     if (e->ny != 0)
     {
         vy = 0;
@@ -52,6 +46,27 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
     else if (e->nx != 0)
     {
         vx = -vx;
+    }
+    if (dynamic_cast<CGoomba*>(e->obj))
+    {
+        CGoomba* enemy = dynamic_cast<CGoomba*>(e->obj);
+        OnCollisionWithGoomba(e);
+    }
+    else if (dynamic_cast<CEdgeChecker*>(e->obj))
+    {
+        OnCollisionWithEdge(e);
+    }
+
+}
+void CKoopas::OnCollisionWithEdge(LPCOLLISIONEVENT e)
+{
+    DebugOut(L"[KOOPAS] Collision with edge\n");
+    CEdgeChecker* edge = dynamic_cast<CEdgeChecker*>(e->obj);
+    if (e->nx != 0)
+    {
+        // Change the direction of movement
+        vx = -vx;
+        nx = -nx; // Update the direction the Koopas is facing
     }
 }
 
@@ -107,6 +122,7 @@ void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
     {
         return;
     }
+
     if (GetState() == KOOPAS_STATE_SHELL_MOVING)
     {
         if (goomba->GetState() != GOOMBA_STATE_DIE)
@@ -114,7 +130,9 @@ void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
             goomba->SetState(GOOMBA_STATE_DIE);
         }
     }
+ 
 }
+
 
 void CKoopas::SetState(int state)
 {

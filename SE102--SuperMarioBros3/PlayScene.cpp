@@ -17,6 +17,7 @@
 #include "RedMushroom.h"
 #include "PakkunFlower.h"
 #include "Bullet.h"
+#include "EdgeChecker.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -168,6 +169,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		break;
 	}
+	case OBJECT_TYPE_EGDE_CHECKER: obj = new CEdgeChecker(x, y); break;
 	case OBJECT_TYPE_COLORPLATFORM:
 	{
 		float cell_width = (float)atof(tokens[3].c_str());

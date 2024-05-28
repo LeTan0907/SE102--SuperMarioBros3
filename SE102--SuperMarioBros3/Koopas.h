@@ -35,13 +35,15 @@ protected:
     virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
     virtual void Render();
 
-    virtual int IsCollidable() { return 1; }
+    virtual int IsCollidable() { return state!=KOOPAS_STATE_DIE; }
     virtual int IsBlocking() { return 0; }
-    virtual void OnNoCollision(DWORD dt);
-    void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
-    virtual void OnCollisionWith(LPCOLLISIONEVENT e);
+    void OnNoCollision(DWORD dt);
+    
+    void OnCollisionWith(LPCOLLISIONEVENT e);
 
 public:
     CKoopas(float x, float y);
     virtual void SetState(int state);
+    void OnCollisionWithEdge(LPCOLLISIONEVENT e);
+    void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 };
