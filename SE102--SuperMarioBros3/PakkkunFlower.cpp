@@ -39,25 +39,29 @@ void CPakkunFlower::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
     CGameObject::Update(dt, coObjects);
     DWORD currentTime = GetTickCount();
-
-    // Handle the cooldown timer for shooting
-    if (state == PAKKUN_FLOWER_STATE_INACTIVE && currentTime - shoot_start >= SHOOT_COOLDOWN)
+    static DWORD lastMarioCheckTime = currentTime;
+    if (currentTime - lastMarioCheckTime >= 3000)
     {
-        // Check if Mario is nearby
+        lastMarioCheckTime = currentTime;
         if (IsMarioNearby())
         {
-            // Shoot a bullet
-            ShootBullet();
             SetState(PAKKUN_FLOWER_STATE_SHOOT);
             shoot_start = currentTime;
         }
     }
-    else if (state == PAKKUN_FLOWER_STATE_SHOOT && currentTime - shoot_start >= SHOOT_COOLDOWN)
+    if (state == PAKKUN_FLOWER_STATE_SHOOT && currentTime - shoot_start >= SHOOT_COOLDOWN)
     {
-        // Set the Pakkun Flower to inactive state after the cooldown period
+        ShootBullet();
         SetState(PAKKUN_FLOWER_STATE_INACTIVE);
+        shoot_start = currentTime;
+    }
+    else if (state == PAKKUN_FLOWER_STATE_INACTIVE && currentTime - shoot_start >= SHOOT_COOLDOWN)
+    {
+        SetState(PAKKUN_FLOWER_STATE_SHOOT);
+        shoot_start = currentTime;
     }
 }
+
 
 void CPakkunFlower::ShootBullet()
 {
