@@ -10,6 +10,7 @@
 #include "Koopas.h"
 #include "Collision.h"
 #include "RedMushroom.h"
+#include "Bullet.h"
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	vy += ay * dt;
@@ -42,11 +43,10 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		vy = 0;
 		if (e->ny < 0) isOnPlatform = true;
 	}
-	else
-		if (e->nx != 0 && e->obj->IsBlocking())
-		{
-			vx = 0;
-		}
+	else if (e->nx != 0 && e->obj->IsBlocking())
+	{
+		vx = 0;
+	}
 
 	if (dynamic_cast<CGoomba*>(e->obj))
 		OnCollisionWithGoomba(e);
@@ -60,6 +60,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithRedMushroom(e);
 	else if (dynamic_cast<CQuestionBox*>(e->obj))
 		OnCollisionWithQuestionBox(e);
+	else if (dynamic_cast<CBullet*>(e->obj))
+		OnCollisionWithBullet(e);
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -150,6 +152,33 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 		}
 	}
 }
+void CMario::OnCollisionWithBullet(LPCOLLISIONEVENT e)
+{
+	// Ensure the collision object is a bullet
+	CBullet* bullet = dynamic_cast<CBullet*>(e->obj);
+	if (!bullet) return;
+
+	// Check if Mario is not in the untouchable state
+	if (untouchable == 0)
+	{
+		// If Mario is big (or any level higher than small), make him small and start the untouchable timer
+		if (level > MARIO_LEVEL_SMALL)
+		{
+			level = MARIO_LEVEL_SMALL;
+			bullet->Delete(); // Remove the bullet after collision
+			StartUntouchable();
+		}
+		else
+		{
+			// If Mario is already small, he dies
+			DebugOut(L">>> Mario DIE >>> \n");
+			bullet->Delete(); // Remove the bullet after collision
+			SetState(MARIO_STATE_DIE);
+		}
+	}
+}
+
+
 void CMario::OnCollisionWithQuestionBox(LPCOLLISIONEVENT e) {
 	CQuestionBox* questionBox = dynamic_cast<CQuestionBox*>(e->obj);
 

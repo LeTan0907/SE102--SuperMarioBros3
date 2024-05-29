@@ -5,7 +5,7 @@
 #include "Bullet.h"
 
 #define SHOOT_COOLDOWN 3000 // Cooldown time between shots (in milliseconds)
-#define BULLET_WALKING_SPEED 0.1f
+#define BULLET_WALKING_SPEED 0.05f
 
 CPakkunFlower::CPakkunFlower(float x, float y) : CGameObject()
 {
@@ -15,7 +15,7 @@ CPakkunFlower::CPakkunFlower(float x, float y) : CGameObject()
     this->ay = 0;
     this->shoot_start = GetTickCount();
     this->isShooting = false;
-    this->SetState(PAKKUN_FLOWER_STATE_SHOOT);
+    this->SetState(PAKKUN_FLOWER_STATE_INACTIVE);
 }
 void CPakkunFlower::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
@@ -39,26 +39,23 @@ void CPakkunFlower::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
     CGameObject::Update(dt, coObjects);
     DWORD currentTime = GetTickCount();
-    static DWORD lastMarioCheckTime = currentTime;
-    if (currentTime - lastMarioCheckTime >= 3000)
+
+    // Handle the cooldown timer for shooting
+    if (state == PAKKUN_FLOWER_STATE_INACTIVE && currentTime - shoot_start >= SHOOT_COOLDOWN)
     {
-        lastMarioCheckTime = currentTime;
+        // Check if Mario is nearby
         if (IsMarioNearby())
         {
+            // Shoot a bullet
+            ShootBullet();
             SetState(PAKKUN_FLOWER_STATE_SHOOT);
             shoot_start = currentTime;
         }
     }
-    if (state == PAKKUN_FLOWER_STATE_SHOOT && currentTime - shoot_start >= SHOOT_COOLDOWN)
+    else if (state == PAKKUN_FLOWER_STATE_SHOOT && currentTime - shoot_start >= SHOOT_COOLDOWN)
     {
-        ShootBullet();
+        // Set the Pakkun Flower to inactive state after the cooldown period
         SetState(PAKKUN_FLOWER_STATE_INACTIVE);
-        shoot_start = currentTime;
-    }
-    else if (state == PAKKUN_FLOWER_STATE_INACTIVE && currentTime - shoot_start >= SHOOT_COOLDOWN)
-    {
-        SetState(PAKKUN_FLOWER_STATE_SHOOT);
-        shoot_start = currentTime;
     }
 }
 
@@ -105,18 +102,12 @@ void CPakkunFlower::Render()
     {
         ani = ID_ANI_PAKKUN_FLOWER_SHOOT;
     }
-
-    // Adjust the rendering position based on the state
     float renderX = x;
     float renderY = y;
-    if (state == PAKKUN_FLOWER_STATE_SHOOT)
+    if (state == PAKKUN_FLOWER_STATE_INACTIVE)
     {
-        // Adjust the rendering position if needed
-        renderX -= (PAKKUN_FLOWER_SHOOT_WIDTH - PAKKUN_FLOWER_INACTIVE_WIDTH) / 2;
-        renderY -= (PAKKUN_FLOWER_SHOOT_HEIGHT - PAKKUN_FLOWER_INACTIVE_HEIGHT) / 2;
+        renderY -= (PAKKUN_FLOWER_SHOOT_HEIGHT - PAKKUN_FLOWER_INACTIVE_HEIGHT) / 4;
     }
-
-    // Render the sprite
     CAnimations::GetInstance()->Get(ani)->Render(renderX, renderY);
 }
 
