@@ -2,6 +2,7 @@
 #include "Goomba.h"
 #include "debug.h"
 #include "EdgeChecker.h"
+#include "PlayScene.h"
 CKoopas::CKoopas(float x, float y) : CGameObject(x, y)
 {
     this->ax = 0;
@@ -54,19 +55,7 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
     }
     else if (dynamic_cast<CEdgeChecker*>(e->obj))
     {
-        OnCollisionWithEdge(e);
-    }
-
-}
-void CKoopas::OnCollisionWithEdge(LPCOLLISIONEVENT e)
-{
-    DebugOut(L"[KOOPAS] Collision with edge\n");
-    CEdgeChecker* edge = dynamic_cast<CEdgeChecker*>(e->obj);
-    if (e->nx != 0)
-    {
-        // Change the direction of movement
-        vx = -vx;
-        nx = -nx; // Update the direction the Koopas is facing
+        edgeChecker->UpdateState(true);
     }
 }
 
@@ -86,10 +75,29 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
         SetState(KOOPAS_STATE_WALKING);
         y -= (KOOPAS_BBOX_HEIGHT - KOOPAS_BBOX_HEIGHT_SHELL) / 2; // Reset position to avoid falling through the ground
     }
+    CPlayScene* scene = dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene());
+    // Spawn edge checker if not already spawned
+    /*if (!edgeChecker) {
+
+        if (scene) {
+            float edgeCheckerX = x + (vx > 0 ? 1 : -1) * EDGE_CHECKER_DISTANCE;
+            float edgeCheckerY = y-2;
+            edgeChecker = new CEdgeChecker(edgeCheckerX, edgeCheckerY);
+            scene->AddObject(edgeChecker);
+        }
+    }
+    if (edgeChecker) {
+        edgeChecker->SetPosition(x + (vx > 0 ? 1 : -1) * EDGE_CHECKER_DISTANCE, y);
+    }
+    if (edgeChecker && edgeChecker->IsAtEdge())
+    {
+        vx = -vx;
+    }*/
 
     CGameObject::Update(dt, coObjects);
     CCollision::GetInstance()->Process(this, dt, coObjects);
 }
+
 
 void CKoopas::Render()
 {

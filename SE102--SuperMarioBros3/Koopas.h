@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "EdgeChecker.h"
 #define KOOPAS_GRAVITY 0.002f
 #define KOOPAS_WALKING_SPEED 0.04f
 #define KOOPAS_SHELL_SPEED 0.15f
@@ -40,10 +41,9 @@ protected:
     void OnNoCollision(DWORD dt);
     
     void OnCollisionWith(LPCOLLISIONEVENT e);
-
+    CEdgeChecker* edgeChecker;
 public:
     CKoopas(float x, float y);
     virtual void SetState(int state);
-    void OnCollisionWithEdge(LPCOLLISIONEVENT e);
     void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 };
