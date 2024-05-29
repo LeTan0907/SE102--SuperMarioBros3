@@ -10,6 +10,7 @@
 #include "Koopas.h"
 #include "Collision.h"
 #include "RedMushroom.h"
+#include "PakkunFlower.h"
 #include "Bullet.h"
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
@@ -62,8 +63,29 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithQuestionBox(e);
 	else if (dynamic_cast<CBullet*>(e->obj))
 		OnCollisionWithBullet(e);
+	else if (dynamic_cast<CPakkunFlower*>(e->obj))
+		OnCollisionWithPakkun(e);
 }
-
+void CMario::OnCollisionWithPakkun(LPCOLLISIONEVENT e)
+{
+	CPakkunFlower* pakkun = dynamic_cast<CPakkunFlower*>(e->obj);
+	if (untouchable == 0)
+	{
+		if (pakkun->GetState() != PAKKUN_FLOWER_STATE_INACTIVE)
+		{
+			if (level > MARIO_LEVEL_SMALL)
+			{
+				level = MARIO_LEVEL_SMALL;
+				StartUntouchable();
+			}
+			else
+			{
+				DebugOut(L">>> Mario DIE >>> \n");
+				SetState(MARIO_STATE_DIE);
+			}
+		}
+	}
+}
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 {
 	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);

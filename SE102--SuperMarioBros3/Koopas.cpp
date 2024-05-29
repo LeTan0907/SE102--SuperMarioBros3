@@ -75,24 +75,24 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
         SetState(KOOPAS_STATE_WALKING);
         y -= (KOOPAS_BBOX_HEIGHT - KOOPAS_BBOX_HEIGHT_SHELL) / 2; // Reset position to avoid falling through the ground
     }
-    CPlayScene* scene = dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene());
-    // Spawn edge checker if not already spawned
-    /*if (!edgeChecker) {
+    //CPlayScene* scene = dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene());
+    //// Spawn edge checker if not already spawned
+    //if (!edgeChecker) {
 
-        if (scene) {
-            float edgeCheckerX = x + (vx > 0 ? 1 : -1) * EDGE_CHECKER_DISTANCE;
-            float edgeCheckerY = y-2;
-            edgeChecker = new CEdgeChecker(edgeCheckerX, edgeCheckerY);
-            scene->AddObject(edgeChecker);
-        }
-    }
-    if (edgeChecker) {
-        edgeChecker->SetPosition(x + (vx > 0 ? 1 : -1) * EDGE_CHECKER_DISTANCE, y);
-    }
-    if (edgeChecker && edgeChecker->IsAtEdge())
-    {
-        vx = -vx;
-    }*/
+    //    if (scene) {
+    //        float edgeCheckerX = x + (vx > 0 ? 1 : -1) * EDGE_CHECKER_DISTANCE;
+    //        float edgeCheckerY = y-2;
+    //        edgeChecker = new CEdgeChecker(edgeCheckerX, edgeCheckerY);
+    //        scene->AddObject(edgeChecker);
+    //    }
+    //}
+    //if (edgeChecker) {
+    //    edgeChecker->SetPosition(x + (vx > 0 ? 1 : -1) * EDGE_CHECKER_DISTANCE, y);
+    //}
+    //if (edgeChecker && edgeChecker->IsAtEdge())
+    //{
+    //    vx = -vx;
+    //}
 
     CGameObject::Update(dt, coObjects);
     CCollision::GetInstance()->Process(this, dt, coObjects);
