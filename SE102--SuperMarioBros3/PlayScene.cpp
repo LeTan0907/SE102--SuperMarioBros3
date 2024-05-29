@@ -321,11 +321,15 @@ void CPlayScene::Render()
 		if (dynamic_cast<CBackground*>(objects[i]))
 			objects[i]->Render();
 	}
-
+	for (size_t i = 0; i < objects.size(); i++)
+	{
+		if (dynamic_cast<CColorPlatform*>(objects[i]))
+			objects[i]->Render();
+	}
 	// Render other objects
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		if (!dynamic_cast<CBackground*>(objects[i]))
+		if (!dynamic_cast<CBackground*>(objects[i])&&!dynamic_cast<CColorPlatform*>(objects[i]))
 			objects[i]->Render();
 	}
 }
