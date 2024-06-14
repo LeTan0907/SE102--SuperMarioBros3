@@ -3,7 +3,7 @@
 
 #include "Animation.h"
 #include "Animations.h"
-
+#include "Koopas.h"
 #include "debug.h"
 
 #define MARIO_WALKING_SPEED		0.15f
@@ -33,7 +33,8 @@
 #define MARIO_STATE_SIT				600
 #define MARIO_STATE_SIT_RELEASE		601
 
-
+#define MARIO_STATE_HOLD 700
+#define MARIO_STATE_THROW 701
 #pragma region ANIMATION_ID
 
 #define ID_ANI_MARIO_IDLE_RIGHT 400
@@ -113,7 +114,7 @@ class CMario : public CGameObject
 	ULONGLONG untouchable_start;
 	BOOLEAN isOnPlatform;
 	int coin;
-
+	//CKoopas* heldKoopa;
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
 	void OnCollisionWithPortal(LPCOLLISIONEVENT e);
@@ -142,7 +143,8 @@ public:
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
 	void SetState(int state);
-
+	//void HoldKoopas(CKoopas* koopa);
+	void ThrowKoopas();
 	int IsCollidable()
 	{
 		return (state != MARIO_STATE_DIE);

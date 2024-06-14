@@ -3,6 +3,7 @@
 #include "debug.h"
 #include "EdgeChecker.h"
 #include "PlayScene.h"
+#define PICKUP_RANGE 100
 CKoopas::CKoopas(float x, float y) : CGameObject(x, y)
 {
     this->ax = 0;
@@ -50,7 +51,6 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
     }
     if (dynamic_cast<CGoomba*>(e->obj))
     {
-        CGoomba* enemy = dynamic_cast<CGoomba*>(e->obj);
         OnCollisionWithGoomba(e);
     }
     else if (dynamic_cast<CEdgeChecker*>(e->obj))
@@ -98,6 +98,22 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
     CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 
+//CKoopas* CKoopas::CheckNearbyKoopas(CMario* mario) {
+//    // Logic to check if a Koopa shell is near Mario
+//    vector<LPGAMEOBJECT> objects = ((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetObjects();
+//    for (size_t i = 0; i < objects.size(); i++) {
+//        CKoopas* koopa = dynamic_cast<CKoopas*>(objects[i]);
+//        if (koopa != nullptr && koopa->GetState() == KOOPAS_STATE_SHELL) {
+//            // Check if the Koopa is close enough to Mario
+//            float koopaX, koopaY;
+//            koopa->GetPosition(koopaX, koopaY);
+//            if (abs(mario->GetX() - koopaX) < PICKUP_RANGE && abs(mario->GetY() - koopaY) < PICKUP_RANGE) {
+//                return koopa;
+//            }
+//        }
+//    }
+//    return nullptr;
+//}
 
 void CKoopas::Render()
 {
@@ -131,7 +147,7 @@ void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
         return;
     }
 
-    if (GetState() == KOOPAS_STATE_SHELL_MOVING)
+    if (state == KOOPAS_STATE_SHELL_MOVING)
     {
         if (goomba->GetState() != GOOMBA_STATE_DIE)
         {

@@ -7,11 +7,25 @@ void CCoin::Render()
 
 	//RenderBoundingBox();
 }
-
+void CCoin :: CoinFly()
+{
+	if (y > temp_y - 30.0f) {
+		y -= 4.0f;
+	}
+	else {
+		isDeleted = true;
+		return;
+	}
+}
 void CCoin::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	l = x - COIN_BBOX_WIDTH / 2;
 	t = y - COIN_BBOX_HEIGHT / 2;
 	r = l + COIN_BBOX_WIDTH;
 	b = t + COIN_BBOX_HEIGHT;
+}
+void CCoin::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+{
+	CGameObject::Update(dt, coObjects);
+	CoinFly();  // Update position
 }

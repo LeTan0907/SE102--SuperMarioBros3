@@ -62,27 +62,18 @@ void CPakkunFlower::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CPakkunFlower::ShootBullet()
 {
-    // Get the player object from the scene
     CGameObject* playerObject = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 
-    // Check if the player object is a CMario instance
     if (dynamic_cast<CMario*>(playerObject) != nullptr)
     {
-        // If it's a CMario instance, calculate the direction towards Mario
         CMario* mario = dynamic_cast<CMario*>(playerObject);
         float marioX = mario->x;
         float marioY = mario->y;
-
-        // Calculate the direction towards Mario
         float dirX = marioX - x;
         float dirY = marioY - y;
-
-        // Normalize the direction vector
         float distance = sqrt(dirX * dirX + dirY * dirY);
         dirX /= distance;
         dirY /= distance;
-
-        // Create a bullet directed towards Mario
         float bulletX = x + PAKKUN_FLOWER_INACTIVE_WIDTH / 4 - BULLET_BBOX_WIDTH;
         float bulletY = y - BULLET_BBOX_HEIGHT * 2;
         CBullet* bullet = new CBullet(bulletX, bulletY);
@@ -106,7 +97,7 @@ void CPakkunFlower::Render()
     float renderY = y;
     if (state == PAKKUN_FLOWER_STATE_INACTIVE)
     {
-        renderY -= (PAKKUN_FLOWER_SHOOT_HEIGHT - PAKKUN_FLOWER_INACTIVE_HEIGHT) / 4;
+        renderY -= (PAKKUN_FLOWER_SHOOT_HEIGHT - PAKKUN_FLOWER_INACTIVE_HEIGHT)/3;
     }
     CAnimations::GetInstance()->Get(ani)->Render(renderX, renderY);
 }
@@ -119,13 +110,11 @@ void CPakkunFlower::SetState(int state)
     switch (state)
     {
     case PAKKUN_FLOWER_STATE_INACTIVE:
-        // Adjust position if needed
         vx = 0;
         vy = 0;
         isShooting = false;
         break;
     case PAKKUN_FLOWER_STATE_SHOOT:
-        // Adjust position if needed
         vx = 0;
         vy = 0;
         isShooting = true;
@@ -134,29 +123,19 @@ void CPakkunFlower::SetState(int state)
 }
 bool CPakkunFlower::IsMarioNearby()
 {
-    // Get the player object from the scene
     CGameObject* playerObject = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
-
-    // Check if the player object is a CMario instance
     if (dynamic_cast<CMario*>(playerObject) != nullptr)
     {
-        // If it's a CMario instance, calculate the distance
         CMario* mario = dynamic_cast<CMario*>(playerObject);
         float marioX = mario->x;
         float marioY = mario->y;
-
-        // Get the distance between Mario and the Pakkun Flower
         float distance = sqrt(pow(x - marioX, 2) + pow(y - marioY, 2));
-
-        // Define the range for Mario to be considered nearby
         float nearbyRange = 120.0f; // Adjust as needed
 
-        // Check if Mario is within the nearby range
         return distance <= nearbyRange;
     }
     else
     {
-        // If it's not a CMario instance, Mario is not nearby
         return false;
     }
 }

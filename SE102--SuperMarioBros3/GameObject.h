@@ -62,7 +62,14 @@ public:
 
 	// When collision with an object has been detected (triggered by CCollision::Process)
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e) {};
-	
+	float GetX()
+	{
+		return x;
+	}
+	float GetY()
+	{
+		return y;
+	}
 	// Is this object blocking other object? If YES, collision framework will automatically push the other object
 	virtual int IsBlocking() { return 1; }
 	~CGameObject();

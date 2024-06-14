@@ -5,7 +5,7 @@
 
 #include "Mario.h"
 #include "PlayScene.h"
-
+#include "Koopas.h"
 void CSampleKeyHandler::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
@@ -48,6 +48,18 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 		mario->SetState(MARIO_STATE_SIT_RELEASE);
 		break;
 	}
+	//case DIK_A:
+	//	if (mario->GetState() == MARIO_STATE_HOLD) {
+	//		mario->ThrowKoopas(); // Corrected function name
+	//	}
+	//	else {
+	//		CKoopas* koopa = CheckNearbyKoopas(mario);
+	//		if (koopa != nullptr && koopa->GetState() == KOOPAS_STATE_SHELL) {
+	//			mario->HoldKoopas(koopa); // Corrected function name
+	//		}
+	//	}
+	//	break;
+
 }
 
 void CSampleKeyHandler::KeyState(BYTE *states)

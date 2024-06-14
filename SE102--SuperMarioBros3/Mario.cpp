@@ -12,13 +12,15 @@
 #include "RedMushroom.h"
 #include "PakkunFlower.h"
 #include "Bullet.h"
+float initial_x = 100.0f;
+float initial_y = 80.0f;
+#define MARIO_RESPAWN_TIME	1500
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	vy += ay * dt;
 	vx += ax * dt;
 
 	if (abs(vx) > abs(maxVx)) vx = maxVx;
-
 	// reset untouchable timer if untouchable time has passed
 	if (GetTickCount64() - untouchable_start > MARIO_UNTOUCHABLE_TIME)
 	{
@@ -453,7 +455,20 @@ void CMario::SetState(int state)
 		ax = 0.0f;
 		vx = 0.0f;
 		break;
-
+	//case MARIO_STATE_HOLD:
+	//	if (heldKoopa != nullptr) {
+	//		// Logic for holding a Koopa shell
+	//		heldKoopa->SetPosition(x, y); // Keep Koopa at Mario's position
+	//	}
+	//	break;
+	//case MARIO_STATE_THROW:
+	//	if (heldKoopa != nullptr) {
+	//		// Logic for throwing a Koopa shell
+	//		heldKoopa->SetState(KOOPAS_STATE_SHELL_MOVING);
+	//		heldKoopa->SetSpeed(0.2f * nx, 0); // Adjust the speed and direction
+	//		heldKoopa = nullptr; // Release the Koopa shell
+	//	}
+	//	break;
 	case MARIO_STATE_DIE:
 		vy = -MARIO_JUMP_DEFLECT_SPEED;
 		vx = 0;
@@ -500,5 +515,13 @@ void CMario::SetLevel(int l)
 		y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT) / 2;
 	}
 	level = l;
+}
+//void CMario::HoldKoopas(CKoopas* koopas) {
+//	heldKoopa = koopas;
+//	SetState(MARIO_STATE_HOLD);
+//}
+
+void CMario::ThrowKoopas() {
+	SetState(MARIO_STATE_THROW);
 }
 

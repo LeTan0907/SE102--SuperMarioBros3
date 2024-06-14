@@ -11,10 +11,15 @@
 #define COIN_BBOX_HEIGHT 16
 #define COIN_SPAWN 1000
 class CCoin : public CGameObject {
+protected:
+	float temp_y;
 public:
-	CCoin(float x, float y) : CGameObject(x, y) {}
+	CCoin(float x, float y) : CGameObject(x, y) {
+		temp_y = y;
+	}
 	void Render();
-	void Update(DWORD dt) {}
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	void CoinFly();
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
 	int IsBlocking() { return 0; }
 };

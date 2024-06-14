@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "EdgeChecker.h"
+#include "Mario.h"
 #define KOOPAS_GRAVITY 0.002f
 #define KOOPAS_WALKING_SPEED 0.04f
 #define KOOPAS_SHELL_SPEED 0.15f
@@ -13,7 +14,7 @@
 #define KOOPAS_STATE_SHELL 200
 #define KOOPAS_STATE_SHELL_MOVING 300
 #define KOOPAS_STATE_DIE 400
-#define KOOPAS_REVIVE_TIMEOUT 10000
+#define KOOPAS_REVIVE_TIMEOUT 5000
 #define KOOPAS_DIE_TIMEOUT 3004
 
 #define ID_ANI_KOOPAS_WALKING_LEFT 6000
@@ -35,7 +36,6 @@ protected:
     virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
     virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
     virtual void Render();
-
     virtual int IsCollidable() { return state!=KOOPAS_STATE_DIE; }
     virtual int IsBlocking() { return 0; }
     void OnNoCollision(DWORD dt);
@@ -46,4 +46,5 @@ public:
     CKoopas(float x, float y);
     virtual void SetState(int state);
     void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
+    //CKoopas* CheckNearbyKoopas(CMario* mario);
 };
