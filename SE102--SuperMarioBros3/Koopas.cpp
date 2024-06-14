@@ -39,8 +39,17 @@ void CKoopas::OnNoCollision(DWORD dt)
 
 void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 {
+    if (dynamic_cast<CGoomba*>(e->obj))
+    {
+        OnCollisionWithGoomba(e);
+    }
+    if (dynamic_cast<CEdgeChecker*>(e->obj))
+    {
+        OnCollisionWithEdgeChecker(e);
+    }
+
     if (!e->obj->IsBlocking()) return;
-    
+
     if (e->ny != 0)
     {
         vy = 0;
@@ -48,14 +57,6 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
     else if (e->nx != 0)
     {
         vx = -vx;
-    }
-    if (dynamic_cast<CGoomba*>(e->obj))
-    {
-        OnCollisionWithGoomba(e);
-    }
-    else if (dynamic_cast<CEdgeChecker*>(e->obj))
-    {
-        edgeChecker->UpdateState(true);
     }
 }
 
@@ -137,6 +138,14 @@ void CKoopas::Render()
     }
 
     CAnimations::GetInstance()->Get(aniId)->Render(x, y);
+}
+void CKoopas::OnCollisionWithEdgeChecker(LPCOLLISIONEVENT e)
+{
+    CEdgeChecker* edgechecker = dynamic_cast<CEdgeChecker*>(e->obj);
+    if (edgechecker != nullptr)
+    {
+        vx = -vx;
+    }
 }
 
 void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e)

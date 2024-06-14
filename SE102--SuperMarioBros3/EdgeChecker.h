@@ -10,17 +10,12 @@
 
 class CEdgeChecker : public CGameObject
 {
-    bool isOnPlatform = false;
-
 public:
     CEdgeChecker(float x, float y) : CGameObject(x, y) {}
     void Render();
     virtual int IsBlocking() { return 0; }
-    void SetPosition(float x, float y);
+    virtual int IsCollidable() { return 1; };
     void GetBoundingBox(float& l, float& t, float& r, float& b);
-    void UpdateState(bool isOnPlatform);
-    bool IsAtEdge();
-    void ResetState();
     void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
     void OnCollisionWith(LPCOLLISIONEVENT e);
 };

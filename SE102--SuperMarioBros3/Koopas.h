@@ -39,12 +39,14 @@ protected:
     virtual int IsCollidable() { return state!=KOOPAS_STATE_DIE; }
     virtual int IsBlocking() { return 0; }
     void OnNoCollision(DWORD dt);
-    
+
     void OnCollisionWith(LPCOLLISIONEVENT e);
     CEdgeChecker* edgeChecker;
 public:
     CKoopas(float x, float y);
     virtual void SetState(int state);
     void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
+    void OnCollisionWithEdgeChecker(LPCOLLISIONEVENT e);
+    void OnCollisionWithQuestionBox(LPCOLLISIONEVENT e);
     //CKoopas* CheckNearbyKoopas(CMario* mario);
 };
