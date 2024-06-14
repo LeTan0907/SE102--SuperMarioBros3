@@ -14,6 +14,7 @@ pakkun.txt
 colorplatform.txt
 background.txt
 bush.txt
+pipe.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -24,14 +25,17 @@ bush.txt
 0	120	10
 # COIN
 
-# Pakkun
-6	430	164
+
 # Goomba
 2	200	160
 2	520	100
 # Koopas
 3	550	140
+#Pakkun
+6 	438	155
 # Platform
+5	430	148	16	15	2	8801	8802	8802
+5	430	164	16	15	2	8803	8804	8804
 5	16	180	16	15	50	33001	33002	33003
 5	16	196	16	15	50	50	51	52
 5	700	148	16	15	40	33001	33002	33003
