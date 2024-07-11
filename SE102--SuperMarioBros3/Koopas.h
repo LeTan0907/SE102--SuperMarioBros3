@@ -14,8 +14,10 @@
 #define KOOPAS_STATE_SHELL 200
 #define KOOPAS_STATE_SHELL_MOVING 300
 #define KOOPAS_STATE_DIE 400
+#define KOOPAS_WINGED_WALKING  500
 #define KOOPAS_REVIVE_TIMEOUT 5000
 #define KOOPAS_DIE_TIMEOUT 3004
+#define KOOPAS_FLY_TIMEOUT 3000
 
 #define ID_ANI_KOOPAS_WALKING_LEFT 6000
 #define ID_ANI_KOOPAS_WALKING_RIGHT 6100
@@ -23,6 +25,7 @@
 #define ID_ANI_KOOPAS_SHELL_MOVING 6002
 #define ID_ANI_KOOPAS_DIE 6003
 #define ID_ANI_KOOPAS_DIE_RETURN 6004
+#define ID_ANI_KOOPAS_WINGED_WALKING 6005
 
 
 class CKoopas : public CGameObject
@@ -33,6 +36,8 @@ protected:
     bool isHold;
     ULONGLONG die_start;
     ULONGLONG shell_start;
+    ULONGLONG winged_walk_start;
+    bool isFlying;
     virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
     virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
     virtual void Render();

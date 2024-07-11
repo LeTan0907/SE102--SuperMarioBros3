@@ -143,7 +143,7 @@ public:
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
 	void SetState(int state);
-	//void HoldKoopas(CKoopas* koopa);
+	bool CheckKoopasNearby();
 	void ThrowKoopas();
 	int IsCollidable()
 	{

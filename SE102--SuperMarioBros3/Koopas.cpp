@@ -2,8 +2,11 @@
 #include "Goomba.h"
 #include "debug.h"
 #include "EdgeChecker.h"
+#include "QuestionBox.h"
 #include "PlayScene.h"
 #define PICKUP_RANGE 100
+#define KOOPAS_WINGED_FLY_DURATION  1500
+#define KOOPAS_WINGED_FLY_INTERVAL 1500
 CKoopas::CKoopas(float x, float y) : CGameObject(x, y)
 {
     this->ax = 0;
@@ -76,25 +79,21 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
         SetState(KOOPAS_STATE_WALKING);
         y -= (KOOPAS_BBOX_HEIGHT - KOOPAS_BBOX_HEIGHT_SHELL) / 2; // Reset position to avoid falling through the ground
     }
-    //CPlayScene* scene = dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene());
-    //// Spawn edge checker if not already spawned
-    //if (!edgeChecker) {
+    if (state == KOOPAS_WINGED_WALKING)
+    {
+        if (!isFlying && GetTickCount64() - winged_walk_start > KOOPAS_WINGED_FLY_INTERVAL)
+        {
+            vy = -0.1f;
+            winged_walk_start = GetTickCount64();
+            isFlying = true; 
+        }
 
-    //    if (scene) {
-    //        float edgeCheckerX = x + (vx > 0 ? 1 : -1) * EDGE_CHECKER_DISTANCE;
-    //        float edgeCheckerY = y-2;
-    //        edgeChecker = new CEdgeChecker(edgeCheckerX, edgeCheckerY);
-    //        scene->AddObject(edgeChecker);
-    //    }
-    //}
-    //if (edgeChecker) {
-    //    edgeChecker->SetPosition(x + (vx > 0 ? 1 : -1) * EDGE_CHECKER_DISTANCE, y);
-    //}
-    //if (edgeChecker && edgeChecker->IsAtEdge())
-    //{
-    //    vx = -vx;
-    //}
-
+        if (isFlying && GetTickCount64() - winged_walk_start > KOOPAS_WINGED_FLY_DURATION)
+        {
+            vy = 0.1f;
+            isFlying = false;
+        }
+    }
     CGameObject::Update(dt, coObjects);
     CCollision::GetInstance()->Process(this, dt, coObjects);
 }
@@ -136,18 +135,34 @@ void CKoopas::Render()
     {
         aniId = ID_ANI_KOOPAS_SHELL_MOVING;
     }
+    else if (state == KOOPAS_WINGED_WALKING)
+        aniId = ID_ANI_KOOPAS_WINGED_WALKING;
 
     CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 }
 void CKoopas::OnCollisionWithEdgeChecker(LPCOLLISIONEVENT e)
 {
     CEdgeChecker* edgechecker = dynamic_cast<CEdgeChecker*>(e->obj);
-    if (edgechecker != nullptr)
+    if (state == KOOPAS_STATE_WALKING)
     {
-        vx = -vx;
+        if (edgechecker != nullptr)
+        {
+            vx = -vx;
+        }
+    }
+    else return;
+}
+void CKoopas::OnCollisionWithQuestionBox(LPCOLLISIONEVENT e)
+{
+    CQuestionBox* questionBox = dynamic_cast<CQuestionBox*>(e->obj);
+    if (state = KOOPAS_STATE_SHELL_MOVING)
+    {
+        if (e->nx != 0) // nx != 0 means collision from the side
+        {
+            questionBox->SpawnReward();
+        }
     }
 }
-
 void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 {
     CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
@@ -176,7 +191,7 @@ void CKoopas::SetState(int state)
         die_start = GetTickCount64();
         y += (KOOPAS_BBOX_HEIGHT - KOOPAS_BBOX_HEIGHT_SHELL) / 2;
         vx = 0;
-        vy = -0.3f;
+        vy = 0.3f;
         ay = 0;
         break;
     case KOOPAS_STATE_WALKING:
@@ -192,6 +207,13 @@ void CKoopas::SetState(int state)
         break;
     case KOOPAS_STATE_SHELL_MOVING:
         vx = KOOPAS_SHELL_SPEED;
+        ax = 0;
+        ay = KOOPAS_GRAVITY;
+        break;
+    case KOOPAS_WINGED_WALKING:
+        winged_walk_start = GetTickCount64();
+        isFlying = false;
+        vx = -KOOPAS_WALKING_SPEED;
         ax = 0;
         ay = KOOPAS_GRAVITY;
         break;

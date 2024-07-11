@@ -12,9 +12,11 @@
 #include "RedMushroom.h"
 #include "PakkunFlower.h"
 #include "Bullet.h"
+#include "PlayScene.h"
 float initial_x = 100.0f;
 float initial_y = 80.0f;
 #define MARIO_RESPAWN_TIME	1500
+#define PICKUP_RANGE	5
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	vy += ay * dt;
@@ -520,6 +522,24 @@ void CMario::SetLevel(int l)
 //	heldKoopa = koopas;
 //	SetState(MARIO_STATE_HOLD);
 //}
+bool CMario::CheckKoopasNearby()
+{
+	vector<LPGAMEOBJECT> objects = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetObjects();
+	for (size_t i = 0; i < objects.size(); i++)
+	{
+		CKoopas* koopa = dynamic_cast<CKoopas*>(objects[i]);
+		if (koopa != nullptr && koopa->GetState() == KOOPAS_STATE_SHELL)
+		{
+			float koopaX, koopaY;
+			koopa->GetPosition(koopaX, koopaY);
+			if (abs(x - koopaX) < PICKUP_RANGE && abs(y - koopaY) < PICKUP_RANGE)
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
 
 void CMario::ThrowKoopas() {
 	SetState(MARIO_STATE_THROW);
