@@ -8,79 +8,85 @@
 #include "Koopas.h"
 void CSampleKeyHandler::OnKeyDown(int KeyCode)
 {
-	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
-	CMario* mario = (CMario *)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer(); 
+    CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 
-	switch (KeyCode)
-	{
-	case DIK_DOWN:
-		mario->SetState(MARIO_STATE_SIT);
-		break;
-	case DIK_S:
-		mario->SetState(MARIO_STATE_JUMP);
-		break;
-	case DIK_1:
-		mario->SetLevel(MARIO_LEVEL_SMALL);
-		break;
-	case DIK_2:
-		mario->SetLevel(MARIO_LEVEL_BIG);
-		break;
-	case DIK_0:
-		mario->SetState(MARIO_STATE_DIE);
-		break;
-	case DIK_R: // reset
-		//Reload();
-		break;
-	}
+    switch (KeyCode)
+    {
+    case DIK_DOWN:
+        mario->SetState(MARIO_STATE_SIT);
+        break;
+    case DIK_S:
+        mario->SetState(MARIO_STATE_JUMP);
+        break;
+    case DIK_1:
+        mario->SetLevel(MARIO_LEVEL_SMALL);
+        break;
+    case DIK_2:
+        mario->SetLevel(MARIO_LEVEL_BIG);
+        break;
+    case DIK_3:
+        mario->SetLevel(MARIO_LEVEL_TANUKI);
+        break;
+    case DIK_0:
+        mario->SetState(MARIO_STATE_DIE);
+        break;
+    case DIK_R: // reset
+        //Reload();
+        break;
+    case DIK_J:
+        if (mario->GetLevel() == MARIO_LEVEL_TANUKI)
+            mario->SetState(MARIO_STATE_TANUKI_FLY);
+        break;
+    case DIK_K:
+        if (mario->GetLevel() == MARIO_LEVEL_TANUKI)
+            mario->SetState(MARIO_STATE_TANUKI_FALL);
+        break;
+    }
 }
 
 void CSampleKeyHandler::OnKeyUp(int KeyCode)
 {
-	//DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
-
-	CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
-	switch (KeyCode)
-	{
-	case DIK_S:
-		mario->SetState(MARIO_STATE_RELEASE_JUMP);
-		break;
-	case DIK_DOWN:
-		mario->SetState(MARIO_STATE_SIT_RELEASE);
-		break;
-	}
-	//case DIK_A:
-	//	if (mario->GetState() == MARIO_STATE_HOLD) {
-	//		mario->ThrowKoopas(); // Corrected function name
-	//	}
-	//	else {
-	//		CKoopas* koopa = CheckNearbyKoopas(mario);
-	//		if (koopa != nullptr && koopa->GetState() == KOOPAS_STATE_SHELL) {
-	//			mario->HoldKoopas(koopa); // Corrected function name
-	//		}
-	//	}
-	//	break;
-
+    CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+    switch (KeyCode)
+    {
+    case DIK_S:
+        mario->SetState(MARIO_STATE_RELEASE_JUMP);
+        break;
+    case DIK_DOWN:
+        mario->SetState(MARIO_STATE_SIT_RELEASE);
+        break;
+    case DIK_J:
+        if (mario->GetLevel() == MARIO_LEVEL_TANUKI)
+            mario->SetState(MARIO_STATE_IDLE); // Reset state when J is released
+        break;
+    case DIK_K:
+        if (mario->GetLevel() == MARIO_LEVEL_TANUKI)
+            mario->SetState(MARIO_STATE_IDLE); // Reset state when K is released
+        break;
+    }
 }
 
-void CSampleKeyHandler::KeyState(BYTE *states)
+void CSampleKeyHandler::KeyState(BYTE* states)
 {
-	LPGAME game = CGame::GetInstance();
-	CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+    LPGAME game = CGame::GetInstance();
+    CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 
-	if (game->IsKeyDown(DIK_RIGHT))
-	{
-		if (game->IsKeyDown(DIK_A))
-			mario->SetState(MARIO_STATE_RUNNING_RIGHT);
-		else
-			mario->SetState(MARIO_STATE_WALKING_RIGHT);
-	}
-	else if (game->IsKeyDown(DIK_LEFT))
-	{
-		if (game->IsKeyDown(DIK_A))
-			mario->SetState(MARIO_STATE_RUNNING_LEFT);
-		else
-			mario->SetState(MARIO_STATE_WALKING_LEFT);
-	}
-	else
-		mario->SetState(MARIO_STATE_IDLE);
+    if (game->IsKeyDown(DIK_RIGHT))
+    {
+        if (game->IsKeyDown(DIK_A))
+            mario->SetState(MARIO_STATE_RUNNING_RIGHT);
+        else
+            mario->SetState(MARIO_STATE_WALKING_RIGHT);
+    }
+    else if (game->IsKeyDown(DIK_LEFT))
+    {
+        if (game->IsKeyDown(DIK_A))
+            mario->SetState(MARIO_STATE_RUNNING_LEFT);
+        else
+            mario->SetState(MARIO_STATE_WALKING_LEFT);
+    }
+    else
+    {
+        mario->SetState(MARIO_STATE_IDLE);
+    }
 }
