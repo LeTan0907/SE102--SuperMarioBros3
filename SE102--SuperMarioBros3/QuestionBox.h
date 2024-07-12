@@ -28,4 +28,8 @@ public:
 		return reward;
 	}
 	void SpawnReward();
+	void setReward(int rewardx)
+	{
+		this->reward = rewardx;
+	}
 };

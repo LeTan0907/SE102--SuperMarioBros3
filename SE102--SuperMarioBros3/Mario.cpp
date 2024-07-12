@@ -9,6 +9,7 @@
 #include "Portal.h"
 #include "Koopas.h"
 #include "Collision.h"
+#include "Leaf.h"
 #include "RedMushroom.h"
 #include "PakkunFlower.h"
 #include "Bullet.h"
@@ -72,6 +73,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithPakkun(e);
 	else if (dynamic_cast<CESpawner*>(e->obj))
 		OnCollisionWithSpawner(e);
+	else if (dynamic_cast<CLeaf*>(e->obj))
+		OnCollisionWithLeaf(e);
 }
 void CMario::OnCollisionWithPakkun(LPCOLLISIONEVENT e)
 {
@@ -135,6 +138,12 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 			}
 		}
 	}
+}
+void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e)
+{
+	CLeaf* leaf = dynamic_cast<CLeaf*>(e->obj);
+	SetLevel(MARIO_LEVEL_TANUKI);
+	e->obj->Delete();
 }
 void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 {
@@ -245,7 +254,23 @@ void CMario::OnCollisionWithQuestionBox(LPCOLLISIONEVENT e) {
 	if (questionBox) {
 		// Check if the collision occurs from below the question box
 		if (e->ny > 0) {
-			if (questionBox->GetState() == STATE_ORIGIN) {
+			if ((questionBox->GetState() == STATE_ORIGIN) && (questionBox->GetReward() != 0 ))
+			{
+				if (level >= MARIO_LEVEL_BIG)
+				{
+					questionBox->setReward(2);
+					questionBox->SpawnReward();
+					questionBox->SetState(STATE_USED);
+				}
+				else if (level == MARIO_LEVEL_SMALL)
+				{
+					questionBox->setReward(1);
+					questionBox->SpawnReward();
+					questionBox->SetState(STATE_USED);
+				}
+			}
+			else if(questionBox->GetState() == STATE_ORIGIN)
+			{
 				questionBox->SpawnReward();
 				questionBox->SetState(STATE_USED);
 			}

@@ -155,6 +155,7 @@ class CMario : public CGameObject
 	void OnCollisionWithBullet(LPCOLLISIONEVENT e);
 	void OnCollisionWithPakkun(LPCOLLISIONEVENT e);
 	void OnCollisionWithSpawner(LPCOLLISIONEVENT e);
+	void OnCollisionWithLeaf(LPCOLLISIONEVENT e);
 	int GetAniIdBig();
 	int GetAniIdSmall();
 	int GetAniIdTanuki();

@@ -57,30 +57,34 @@ void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 
 void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-    vy += ay * dt;
-    vx += ax * dt;
-    if (state == GOOMBA_STATE_WINGED_WALKING)
-    {
-		if ((state == GOOMBA_STATE_WINGED_WALKING) && (GetTickCount64() - fly_start > GOOMBA_DIE_TIMEOUT)) {
+	vy += ay * dt;
+	vx += ax * dt;
+
+	// Update Goomba's position and check collisions
+	CGameObject::Update(dt, coObjects);
+	CCollision::GetInstance()->Process(this, dt, coObjects);
+
+	if (state == GOOMBA_STATE_WINGED_WALKING || state == GOOMBA_STATE_WINGED_FLY)
+	{
+		if (state == GOOMBA_STATE_WINGED_WALKING && GetTickCount64() - fly_start > 3000)
+		{
 			SetState(GOOMBA_STATE_WINGED_FLY);
-			vy = -GOOMBA_FLYING_SPEED;
 		}
-		if ((state == GOOMBA_STATE_WINGED_FLY) && (GetTickCount64() - fly_start > GOOMBA_FLY_DURATION))
+		else if (state == GOOMBA_STATE_WINGED_FLY && GetTickCount64() - fly_start > GOOMBA_FLY_DURATION)
+		{
 			SetState(GOOMBA_STATE_WINGED_WALKING);
-    }
+		}
+	}
 
-    // Handle death state timeout
-    if (state == GOOMBA_STATE_DIE && GetTickCount64() - die_start > GOOMBA_DIE_TIMEOUT)
-    {
-        // Mark as deleted if die timeout has passed
-        isDeleted = true;
-        return;
-    }
-
-    // Update Goomba's position and check collisions
-    CGameObject::Update(dt, coObjects);
-    CCollision::GetInstance()->Process(this, dt, coObjects);
+	// Handle death state timeout
+	if (state == GOOMBA_STATE_DIE && GetTickCount64() - die_start > GOOMBA_DIE_TIMEOUT)
+	{
+		// Mark as deleted if die timeout has passed
+		isDeleted = true;
+		return;
+	}
 }
+
 
 void CGoomba::Render()
 {

@@ -2,6 +2,7 @@
 #include "Animations.h"
 #include "RedMushroom.h"
 #include "PlayScene.h"
+#include "Leaf.h"
 #include "Coin.h"
 void CQuestionBox::Render() {
     int aniId = ID_ANI_QUESTIONBOX_ORIGIN;
@@ -34,14 +35,17 @@ void CQuestionBox::SpawnReward() {
     CGameObject* rewardObject = nullptr;
     if (reward == 0) {
         rewardObject = new CCoin(x, y - QSB_BBOX_HEIGHT);
-        if (GetTickCount64() - COIN_SPAWN ==0) {
+        if (GetTickCount64() - COIN_SPAWN == 0) {
             rewardObject->Delete();
         }// Spawn a coin
     }
     else if (reward == 1) {
-        rewardObject = new CRedMushroom(x, y - QSB_BBOX_HEIGHT); // Spawn a mushroom
+        rewardObject = new CRedMushroom(x, y - QSB_BBOX_HEIGHT);
     }
-
+    else
+    {
+        rewardObject = new CLeaf(x, y - QSB_BBOX_HEIGHT);
+    }
     if (rewardObject) {
         CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
         scene->AddObject(rewardObject);
