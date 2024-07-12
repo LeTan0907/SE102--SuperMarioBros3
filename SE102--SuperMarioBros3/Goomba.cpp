@@ -8,23 +8,31 @@ CGoomba::CGoomba(float x, float y):CGameObject(x, y)
 	SetState(GOOMBA_STATE_WALKING);
 }
 
-void CGoomba::GetBoundingBox(float &left, float &top, float &right, float &bottom)
+void CGoomba::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (state == GOOMBA_STATE_DIE)
-	{
-		left = x - GOOMBA_BBOX_WIDTH/2;
-		top = y - GOOMBA_BBOX_HEIGHT_DIE/2;
-		right = left + GOOMBA_BBOX_WIDTH;
-		bottom = top + GOOMBA_BBOX_HEIGHT_DIE;
-	}
-	else
-	{ 
-		left = x - GOOMBA_BBOX_WIDTH/2;
-		top = y - GOOMBA_BBOX_HEIGHT/2;
-		right = left + GOOMBA_BBOX_WIDTH;
-		bottom = top + GOOMBA_BBOX_HEIGHT;
-	}
+    if (state == GOOMBA_STATE_DIE)
+    {
+        left = x - GOOMBA_BBOX_WIDTH / 2;
+        top = y - GOOMBA_BBOX_HEIGHT_DIE / 2;
+        right = left + GOOMBA_BBOX_WIDTH;
+        bottom = top + GOOMBA_BBOX_HEIGHT_DIE;
+    }
+    else if (state == GOOMBA_STATE_WINGED_WALKING || state == GOOMBA_STATE_WINGED_FLY)
+    {
+        left = x - GOOMBA_WINGED_BBOX_WIDTH / 2;
+        top = y - GOOMBA_WINGED_BBOX_HEIGHT / 2;
+        right = left + GOOMBA_WINGED_BBOX_WIDTH;
+        bottom = top + GOOMBA_WINGED_BBOX_HEIGHT;
+    }
+    else
+    {
+        left = x - GOOMBA_BBOX_WIDTH / 2;
+        top = y - GOOMBA_BBOX_HEIGHT / 2;
+        right = left + GOOMBA_BBOX_WIDTH;
+        bottom = top + GOOMBA_BBOX_HEIGHT;
+    }
 }
+
 
 void CGoomba::OnNoCollision(DWORD dt)
 {
@@ -53,30 +61,12 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
     vx += ax * dt;
     if (state == GOOMBA_STATE_WINGED_WALKING)
     {
-        if (isFlying)
-        {
-            if (GetTickCount64() - flying_time > GOOMBA_FLY_TIME)
-            {
-                isFlying = false;
-                ay = GOOMBA_GRAVITY;
-                vx = -GOOMBA_WALKING_SPEED; 
-            }
-        }
-        else
-        {
-            if (GetTickCount64() - fly_start > GOOMBA_FLY_DURATION)
-            {
-                isFlying = true;
-                flying_time = GetTickCount64(); // Record flying start time
-                ay = 0; // No gravity when flying
-                vx = 0; // No horizontal movement when flying
-            }
-            else
-            {
-                // Continue walking if not flying
-                vx = -GOOMBA_WALKING_SPEED; // Constant walking speed
-            }
-        }
+		if ((state == GOOMBA_STATE_WINGED_WALKING) && (GetTickCount64() - fly_start > GOOMBA_DIE_TIMEOUT)) {
+			SetState(GOOMBA_STATE_WINGED_FLY);
+			vy = -GOOMBA_FLYING_SPEED;
+		}
+		if ((state == GOOMBA_STATE_WINGED_FLY) && (GetTickCount64() - fly_start > GOOMBA_FLY_DURATION))
+			SetState(GOOMBA_STATE_WINGED_WALKING);
     }
 
     // Handle death state timeout
@@ -99,7 +89,7 @@ void CGoomba::Render()
 	{
 		aniId = ID_ANI_GOOMBA_DIE;
 	}
-	if (state == GOOMBA_STATE_WINGED_WALKING)
+	if (state == GOOMBA_STATE_WINGED_WALKING||state == GOOMBA_STATE_WINGED_FLY)
 	{
 		aniId = ID_ANI_GOOMBA_WINGED;
 	}
@@ -126,6 +116,10 @@ void CGoomba::SetState(int state)
 		case GOOMBA_STATE_WINGED_WALKING:
 			vx = -GOOMBA_WALKING_SPEED;
 			fly_start = GetTickCount64();
+			break;
+		case GOOMBA_STATE_WINGED_FLY:
+			fly_start = GetTickCount64();
+			vx = -GOOMBA_WALKING_SPEED;
 			break;
 	}
 }

@@ -3,7 +3,7 @@ void CEdgeChecker::Render()
 {
 	CAnimations* animations = CAnimations::GetInstance();
 	animations->Get(ID_ANI_EDGECHECKER)->Render(x, y);
-
+	RenderBoundingBox();
 }
 
 
