@@ -13,6 +13,7 @@
 #include "PakkunFlower.h"
 #include "Bullet.h"
 #include "PlayScene.h"
+#include "EnemySpawner.h"
 float initial_x = 100.0f;
 float initial_y = 80.0f;
 #define MARIO_RESPAWN_TIME	1500
@@ -213,7 +214,12 @@ void CMario::OnCollisionWithBullet(LPCOLLISIONEVENT e)
 		}
 	}
 }
-
+void CMario::OnCollisionWithSpawner(LPCOLLISIONEVENT e)
+{
+	CESpawner* spawner= dynamic_cast<CESpawner*>(e->obj);
+	spawner->get
+	e->obj->Delete();
+}
 
 void CMario::OnCollisionWithQuestionBox(LPCOLLISIONEVENT e) {
 	CQuestionBox* questionBox = dynamic_cast<CQuestionBox*>(e->obj);
