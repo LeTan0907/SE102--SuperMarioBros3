@@ -53,6 +53,7 @@ public:
     void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
     void OnCollisionWithEdgeChecker(LPCOLLISIONEVENT e);
     void OnCollisionWithQuestionBox(LPCOLLISIONEVENT e);
+    void OnCollisionWithCBrick(LPCOLLISIONEVENT e);
     //CKoopas* CheckNearbyKoopas(CMario* mario);
     void setisHold() {
         this->isHold = 1;

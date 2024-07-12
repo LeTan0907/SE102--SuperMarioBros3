@@ -3,6 +3,7 @@
 #include "debug.h"
 #include "EdgeChecker.h"
 #include "QuestionBox.h"
+#include "ColliableBrick.h"
 #include "PlayScene.h"
 #define PICKUP_RANGE 100
 #define KOOPAS_WINGED_FLY_DURATION  1500
@@ -63,7 +64,17 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
         vx = -vx;
     }
 }
-
+void CKoopas:: OnCollisionWithCBrick(LPCOLLISIONEVENT e)
+{
+    CCBrick* brick = dynamic_cast<CCBrick*>(e->obj);
+    if (state = KOOPAS_STATE_SHELL_MOVING)
+    {
+        if (e->nx != 0) // nx != 0 means collision from the side
+        {
+            e->obj->Delete();
+        }
+    }
+}
 void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
     float mario_x, mario_y;
