@@ -153,6 +153,7 @@
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Coin.cpp" />
+    <ClCompile Include="ColliableBrick.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="EdgeChecker.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="Brick.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Coin.h" />
+    <ClInclude Include="ColliableBrick.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="debug.h" />
     <ClInclude Include="EdgeChecker.h" />
