@@ -49,6 +49,29 @@ void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 
 void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+	if (state == GOOMBA_STATE_WINGED_WALKING)
+	{
+		if (isFlying)
+		{
+			if (GetTickCount64() - flying_time > GOOMBA_FLY_TIME)
+			{
+				isFlying = false;
+				ay = GOOMBA_GRAVITY;
+				vx = -GOOMBA_WALKING_SPEED;
+			}
+			else
+			{
+				vy = -GOOMBA_FLYING_SPEED;
+			}
+		}
+		else if (GetTickCount64() - fly_start > GOOMBA_FLY_DURATION)
+		{
+			isFlying = true;
+			flying_time = GetTickCount64();
+			ay = 0;
+			vx = 0;
+		}
+	}
 	vy += ay * dt;
 	vx += ax * dt;
 
@@ -87,6 +110,11 @@ void CGoomba::SetState(int state)
 			break;
 		case GOOMBA_STATE_WALKING: 
 			vx = -GOOMBA_WALKING_SPEED;
+			break;
+			break;
+		case GOOMBA_STATE_WINGED_WALKING:
+			vx = -GOOMBA_WALKING_SPEED;
+			fly_start = GetTickCount64();
 			break;
 	}
 }

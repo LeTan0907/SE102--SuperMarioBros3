@@ -97,7 +97,12 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 	// jump on top >> kill Goomba and deflect a bit 
 	if (e->ny < 0)
 	{
-		if (goomba->GetState() != GOOMBA_STATE_DIE)
+		if (goomba->GetState() == GOOMBA_STATE_WINGED_WALKING)
+		{
+			goomba->SetState(GOOMBA_STATE_WALKING);
+			vy = -MARIO_JUMP_DEFLECT_SPEED;
+		}
+		if (goomba->GetState() == GOOMBA_STATE_WALKING)
 		{
 			goomba->SetState(GOOMBA_STATE_DIE);
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
@@ -132,7 +137,12 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 
 	// Jump on top of Koopas
 	if (e->ny < 0)
-	{
+	{	
+		if (koopas->GetState() == KOOPAS_WINGED_WALKING)
+		{
+			koopas->SetState(KOOPAS_STATE_WALKING);
+			vy = -MARIO_JUMP_DEFLECT_SPEED;
+		}
 		if (koopas->GetState() == KOOPAS_STATE_WALKING)
 		{
 			koopas->SetState(KOOPAS_STATE_SHELL);
@@ -147,7 +157,7 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 		}
 		else if (koopas->GetState() == KOOPAS_STATE_SHELL_MOVING)
 		{
-			koopas->SetState(KOOPAS_STATE_DIE);
+			koopas->SetState(KOOPAS_STATE_SHELL);
 			DebugOut(L">>> Koopas Die >>> \n");
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
 		}
