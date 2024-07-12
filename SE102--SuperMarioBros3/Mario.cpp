@@ -115,7 +115,12 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 		{
 			if (goomba->GetState() != GOOMBA_STATE_DIE)
 			{
-				if (level > MARIO_LEVEL_SMALL)
+				if (level == MARIO_LEVEL_TANUKI)
+				{
+					level = MARIO_LEVEL_BIG;
+					StartUntouchable();
+				}
+				if (level == MARIO_LEVEL_BIG)
 				{
 					level = MARIO_LEVEL_SMALL;
 					StartUntouchable();
@@ -175,7 +180,12 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 		{
 			if (koopas->GetState() != KOOPAS_STATE_DIE && koopas->GetState() != KOOPAS_STATE_SHELL)
 			{
-				if (level > MARIO_LEVEL_SMALL)
+				if (level == MARIO_LEVEL_TANUKI)
+				{
+					level = MARIO_LEVEL_BIG;
+					StartUntouchable();
+				}
+				if (level == MARIO_LEVEL_BIG)
 				{
 					level = MARIO_LEVEL_SMALL;
 					StartUntouchable();
@@ -198,8 +208,14 @@ void CMario::OnCollisionWithBullet(LPCOLLISIONEVENT e)
 	// Check if Mario is not in the untouchable state
 	if (untouchable == 0)
 	{
+		if (level == MARIO_LEVEL_TANUKI)
+		{
+			level = MARIO_LEVEL_BIG;
+			bullet->Delete(); // Remove the bullet after collision
+			StartUntouchable();
+		}
 		// If Mario is big (or any level higher than small), make him small and start the untouchable timer
-		if (level > MARIO_LEVEL_SMALL)
+		if (level == MARIO_LEVEL_BIG)
 		{
 			level = MARIO_LEVEL_SMALL;
 			bullet->Delete(); // Remove the bullet after collision
@@ -383,6 +399,80 @@ int CMario::GetAniIdBig()
 
 	return aniId;
 }
+int CMario::GetAniIdTanuki()
+{
+	int aniId = -1;
+	if (!isOnPlatform)
+	{
+		if (isFlying&&state== MARIO_STATE_TANUKI_FLY)
+		{
+			if (nx >= 0)
+				aniId = ID_ANI_MARIO_TANUKI_FLY_RIGHT;
+			else
+				aniId = ID_ANI_MARIO_TANUKI_FLY_LEFT;
+		}
+		else if (isFalling)
+		{
+			if (nx >= 0)
+				aniId = ID_ANI_MARIO_TANUKI_FALL_RIGHT;
+			else
+				aniId = ID_ANI_MARIO_TANUKI_FALL_LEFT;
+		}
+		else
+		{
+			if (abs(ax) == MARIO_ACCEL_RUN_X)
+			{
+				if (nx >= 0)
+					aniId = ID_ANI_MARIO_TANUKI_JUMP_RUN_RIGHT;
+				else
+					aniId = ID_ANI_MARIO_TANUKI_JUMP_RUN_LEFT;
+			}
+			else
+			{
+				if (nx >= 0)
+					aniId = ID_ANI_MARIO_TANUKI_JUMP_WALK_RIGHT;
+				else
+					aniId = ID_ANI_MARIO_TANUKI_JUMP_WALK_LEFT;
+			}
+		}
+	}
+	else
+		if (isSitting)
+		{
+			if (nx > 0)
+				aniId = ID_ANI_MARIO_TANUKI_SIT_RIGHT;
+			else
+				aniId = ID_ANI_MARIO_TANUKI_SIT_LEFT;
+		}
+		else
+			if (vx == 0)
+			{
+				if (nx > 0) aniId = ID_ANI_MARIO_TANUKI_IDLE_RIGHT;
+				else aniId = ID_ANI_MARIO_TANUKI_IDLE_LEFT;
+			}
+			else if (vx > 0)
+			{
+				if (ax < 0)
+					aniId = ID_ANI_MARIO_TANUKI_BRACE_RIGHT;
+				else if (ax == MARIO_ACCEL_RUN_X)
+					aniId = ID_ANI_MARIO_TANUKI_RUNNING_RIGHT;
+				else if (ax == MARIO_ACCEL_WALK_X)
+					aniId = ID_ANI_MARIO_TANUKI_WALKING_RIGHT;
+			}
+			else // vx < 0
+			{
+				if (ax > 0)
+					aniId = ID_ANI_MARIO_TANUKI_BRACE_LEFT;
+				else if (ax == -MARIO_ACCEL_RUN_X)
+					aniId = ID_ANI_MARIO_TANUKI_RUNNING_LEFT;
+				else if (ax == -MARIO_ACCEL_WALK_X)
+					aniId = ID_ANI_MARIO_TANUKI_WALKING_LEFT;
+			}
+
+	if (aniId == -1) aniId = ID_ANI_MARIO_TANUKI_IDLE_RIGHT;
+
+	return aniId;
+}
 
 void CMario::Render()
 {
@@ -395,17 +485,19 @@ void CMario::Render()
 		aniId = GetAniIdBig();
 	else if (level == MARIO_LEVEL_SMALL)
 		aniId = GetAniIdSmall();
+	else if (level == MARIO_LEVEL_TANUKI)
+		aniId = GetAniIdTanuki();
 
 	animations->Get(aniId)->Render(x, y);
 
-	//RenderBoundingBox();
+	// RenderBoundingBox();
 
 	DebugOutTitle(L"Coins: %d", coin);
 }
 
 void CMario::SetState(int state)
 {
-	// DIE is the end state, cannot be changed! 
+	// DIE is the end state, cannot be changed!
 	if (this->state == MARIO_STATE_DIE) return;
 
 	switch (state)
@@ -444,11 +536,9 @@ void CMario::SetState(int state)
 				vy = -MARIO_JUMP_SPEED_Y;
 		}
 		break;
-
 	case MARIO_STATE_RELEASE_JUMP:
 		if (vy < 0) vy += MARIO_JUMP_SPEED_Y / 2;
 		break;
-
 	case MARIO_STATE_SIT:
 		if (isOnPlatform && level != MARIO_LEVEL_SMALL)
 		{
@@ -458,41 +548,26 @@ void CMario::SetState(int state)
 			y += MARIO_SIT_HEIGHT_ADJUST;
 		}
 		break;
-
 	case MARIO_STATE_SIT_RELEASE:
 		if (isSitting)
 		{
 			isSitting = false;
-			state = MARIO_STATE_IDLE;
 			y -= MARIO_SIT_HEIGHT_ADJUST;
 		}
 		break;
-
-	case MARIO_STATE_IDLE:
-		ax = 0.0f;
-		vx = 0.0f;
+	case MARIO_STATE_TANUKI_FLY:
+		isFlying = true;
+		isFalling = false;
+		vy = -MARIO_JUMP_SPEED_Y/3;
 		break;
-	//case MARIO_STATE_HOLD:
-	//	if (heldKoopa != nullptr) {
-	//		// Logic for holding a Koopa shell
-	//		heldKoopa->SetPosition(x, y); // Keep Koopa at Mario's position
-	//	}
-	//	break;
-	//case MARIO_STATE_THROW:
-	//	if (heldKoopa != nullptr) {
-	//		// Logic for throwing a Koopa shell
-	//		heldKoopa->SetState(KOOPAS_STATE_SHELL_MOVING);
-	//		heldKoopa->SetSpeed(0.2f * nx, 0); // Adjust the speed and direction
-	//		heldKoopa = nullptr; // Release the Koopa shell
-	//	}
-	//	break;
-	case MARIO_STATE_DIE:
-		vy = -MARIO_JUMP_DEFLECT_SPEED;
-		vx = 0;
-		ax = 0;
+	case MARIO_STATE_TANUKI_FALL:
+		isFlying = false;
+		isFalling = true;
+		vy = MARIO_GRAVITY/10;
+		break;
+	default:
 		break;
 	}
-
 	CGameObject::SetState(state);
 }
 
@@ -513,6 +588,40 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 			top = y - MARIO_BIG_BBOX_HEIGHT / 2;
 			right = left + MARIO_BIG_BBOX_WIDTH;
 			bottom = top + MARIO_BIG_BBOX_HEIGHT;
+		}
+	}
+	else if (level == MARIO_LEVEL_TANUKI)
+	{
+		if (isSitting)
+		{
+			left = x - MARIO_BIG_SITTING_BBOX_WIDTH / 2;
+			top = y - MARIO_BIG_SITTING_BBOX_HEIGHT / 2;
+			right = left + MARIO_BIG_SITTING_BBOX_WIDTH;
+			bottom = top + MARIO_BIG_SITTING_BBOX_HEIGHT;
+		}
+		else
+		{
+			left = x - MARIO_BIG_BBOX_WIDTH / 2;
+			top = y - MARIO_BIG_BBOX_HEIGHT / 2;
+			right = left + MARIO_BIG_BBOX_WIDTH;
+			bottom = top + MARIO_BIG_BBOX_HEIGHT;
+		}
+	}
+	else if (level == MARIO_LEVEL_TANUKI)
+	{
+		if (isSitting)
+		{
+			left = x - MARIO_TANUKI_SITTING_BBOX_WIDTH / 2;
+			top = y - MARIO_TANUKI_SITTING_BBOX_HEIGHT / 2;
+			right = left + MARIO_TANUKI_SITTING_BBOX_WIDTH;
+			bottom = top + MARIO_TANUKI_SITTING_BBOX_HEIGHT;
+		}
+		else
+		{
+			left = x - MARIO_TANUKI_BBOX_WIDTH / 2;
+			top = y - MARIO_TANUKI_BBOX_HEIGHT / 2;
+			right = left + MARIO_TANUKI_BBOX_WIDTH;
+			bottom = top + MARIO_TANUKI_BBOX_HEIGHT;
 		}
 	}
 	else

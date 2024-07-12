@@ -89,4 +89,15 @@ void CSampleKeyHandler::KeyState(BYTE* states)
     {
         mario->SetState(MARIO_STATE_IDLE);
     }
+    if (mario->GetLevel() == MARIO_LEVEL_TANUKI)
+    {
+        if (game->IsKeyDown(DIK_J))
+        {
+            mario->SetState(MARIO_STATE_TANUKI_FLY);
+        }
+        else if (game->IsKeyDown(DIK_K))
+        {
+            mario->SetState(MARIO_STATE_TANUKI_FALL);
+        }
+    }
 }
