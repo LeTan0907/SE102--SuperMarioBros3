@@ -40,5 +40,27 @@ void CESpawner::SpawnGoomba()
 
 void CESpawner::SpawnKoopas()
 {
+    CKoopas* koopas1 = new CKoopas(x, y);
+    CKoopas* koopas2 = new CKoopas(x, y);
+    CKoopas* koopas3 = new CKoopas(x, y);
 
+    koopas1->SetState(KOOPAS_WINGED_WALKING);
+    koopas2->SetState(KOOPAS_WINGED_WALKING);
+    koopas3->SetState(KOOPAS_WINGED_WALKING);
+
+    CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+    scene->AddObject(koopas1);
+    scene->AddObject(koopas2);
+    scene->AddObject(koopas3);
+}
+void CESpawner::Spawn()
+{
+    if (type == 1)
+    {
+        SpawnGoomba();
+    }
+    if (type == 2)
+    {
+        SpawnKoopas();
+    }
 }

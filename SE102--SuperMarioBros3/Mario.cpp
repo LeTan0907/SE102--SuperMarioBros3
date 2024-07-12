@@ -217,7 +217,6 @@ void CMario::OnCollisionWithBullet(LPCOLLISIONEVENT e)
 void CMario::OnCollisionWithSpawner(LPCOLLISIONEVENT e)
 {
 	CESpawner* spawner= dynamic_cast<CESpawner*>(e->obj);
-	spawner->get
 	e->obj->Delete();
 }
 

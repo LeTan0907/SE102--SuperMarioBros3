@@ -20,4 +20,5 @@ public:
     void OnCollisionWith(LPCOLLISIONEVENT e);
     void SpawnGoomba();
     void SpawnKoopas();
+    void Spawn();
 };
