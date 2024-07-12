@@ -70,6 +70,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithBullet(e);
 	else if (dynamic_cast<CPakkunFlower*>(e->obj))
 		OnCollisionWithPakkun(e);
+	else if (dynamic_cast<CESpawner*>(e->obj))
+		OnCollisionWithSpawner(e);
 }
 void CMario::OnCollisionWithPakkun(LPCOLLISIONEVENT e)
 {
@@ -233,6 +235,7 @@ void CMario::OnCollisionWithBullet(LPCOLLISIONEVENT e)
 void CMario::OnCollisionWithSpawner(LPCOLLISIONEVENT e)
 {
 	CESpawner* spawner= dynamic_cast<CESpawner*>(e->obj);
+	spawner->Spawn();
 	e->obj->Delete();
 }
 
@@ -513,6 +516,15 @@ void CMario::SetState(int state)
 		maxVx = -MARIO_RUNNING_SPEED;
 		ax = -MARIO_ACCEL_RUN_X;
 		nx = -1;
+		break;
+	case MARIO_STATE_IDLE:
+		ax = 0.0f;
+		vx = 0.0f;
+		break;
+	case MARIO_STATE_DIE:
+		vy = -MARIO_JUMP_DEFLECT_SPEED;
+		vx = 0;
+		ax = 0;
 		break;
 	case MARIO_STATE_WALKING_RIGHT:
 		if (isSitting) break;

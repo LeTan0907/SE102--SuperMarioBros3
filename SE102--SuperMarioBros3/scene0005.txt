@@ -51,6 +51,8 @@ leaf.txt
 #EdgeChecker
 55	490	110
 55	650	110
+#Spawner
+56	600	120	1
 #Leaf
 11	180	100
 # QuestionBox

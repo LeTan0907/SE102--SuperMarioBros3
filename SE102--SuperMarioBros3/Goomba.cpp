@@ -47,42 +47,49 @@ void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 }
 
-void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
+void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if (state == GOOMBA_STATE_WINGED_WALKING)
-	{
-		if (isFlying)
-		{
-			if (GetTickCount64() - flying_time > GOOMBA_FLY_TIME)
-			{
-				isFlying = false;
-				ay = GOOMBA_GRAVITY;
-				vx = -GOOMBA_WALKING_SPEED;
-			}
-			else
-			{
-				vy = -GOOMBA_FLYING_SPEED;
-			}
-		}
-		else if (GetTickCount64() - fly_start > GOOMBA_FLY_DURATION)
-		{
-			isFlying = true;
-			flying_time = GetTickCount64();
-			ay = 0;
-			vx = 0;
-		}
-	}
-	vy += ay * dt;
-	vx += ax * dt;
+    vy += ay * dt;
+    vx += ax * dt;
+    if (state == GOOMBA_STATE_WINGED_WALKING)
+    {
+        if (isFlying)
+        {
+            if (GetTickCount64() - flying_time > GOOMBA_FLY_TIME)
+            {
+                isFlying = false;
+                ay = GOOMBA_GRAVITY;
+                vx = -GOOMBA_WALKING_SPEED; 
+            }
+        }
+        else
+        {
+            if (GetTickCount64() - fly_start > GOOMBA_FLY_DURATION)
+            {
+                isFlying = true;
+                flying_time = GetTickCount64(); // Record flying start time
+                ay = 0; // No gravity when flying
+                vx = 0; // No horizontal movement when flying
+            }
+            else
+            {
+                // Continue walking if not flying
+                vx = -GOOMBA_WALKING_SPEED; // Constant walking speed
+            }
+        }
+    }
 
-	if ( (state==GOOMBA_STATE_DIE) && (GetTickCount64() - die_start > GOOMBA_DIE_TIMEOUT) )
-	{
-		isDeleted = true;
-		return;
-	}
+    // Handle death state timeout
+    if (state == GOOMBA_STATE_DIE && GetTickCount64() - die_start > GOOMBA_DIE_TIMEOUT)
+    {
+        // Mark as deleted if die timeout has passed
+        isDeleted = true;
+        return;
+    }
 
-	CGameObject::Update(dt, coObjects);
-	CCollision::GetInstance()->Process(this, dt, coObjects);
+    // Update Goomba's position and check collisions
+    CGameObject::Update(dt, coObjects);
+    CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 
 void CGoomba::Render()
@@ -91,6 +98,10 @@ void CGoomba::Render()
 	if (state == GOOMBA_STATE_DIE) 
 	{
 		aniId = ID_ANI_GOOMBA_DIE;
+	}
+	if (state == GOOMBA_STATE_WINGED_WALKING)
+	{
+		aniId = ID_ANI_GOOMBA_WINGED;
 	}
 
 	CAnimations::GetInstance()->Get(aniId)->Render(x,y);

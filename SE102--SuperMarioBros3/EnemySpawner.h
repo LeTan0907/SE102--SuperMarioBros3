@@ -3,7 +3,7 @@
 #include "Animation.h"
 #include "Animations.h"
 #define SPAWNER_BBOX_WIDTH 16
-#define SPAWNER_BBOX_HEIGHT 2000
+#define SPAWNER_BBOX_HEIGHT 200
 #define ID_ANI_SPAWNER 0
 class CESpawner : public CGameObject
 {
