@@ -100,7 +100,7 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 	// jump on top >> kill Goomba and deflect a bit 
 	if (e->ny < 0)
 	{
-		if (goomba->GetState() == GOOMBA_STATE_WINGED_WALKING)
+		if (goomba->GetState() == GOOMBA_STATE_WINGED_WALKING|| goomba->GetState() == GOOMBA_STATE_WINGED_FLY)
 		{
 			goomba->SetState(GOOMBA_STATE_WALKING);
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
@@ -677,7 +677,9 @@ bool CMario::CheckKoopasNearby()
 	return false;
 }
 
-void CMario::ThrowKoopas() {
-	SetState(MARIO_STATE_THROW);
+void CMario::setTurtle(int i) {
+	this->holdKoopas = i;
 }
-
+int CMario::getTurtle() {
+	return holdKoopas;
+}

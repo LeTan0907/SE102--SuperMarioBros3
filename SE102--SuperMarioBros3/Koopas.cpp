@@ -12,6 +12,7 @@ CKoopas::CKoopas(float x, float y) : CGameObject(x, y)
     this->ax = 0;
     this->ay = KOOPAS_GRAVITY;
     die_start = -1;
+    isHold = 0;
     shell_start = -1; // Initialize shell start time
     SetState(KOOPAS_STATE_WALKING);
 }
@@ -65,6 +66,10 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 
 void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+    float mario_x, mario_y;
+    CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+    mario->GetPosition(mario_x, mario_y);
+
     vy += ay * dt;
     vx += ax * dt;
 
@@ -73,7 +78,20 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
         isDeleted = true;
         return;
     }
+    if (state == KOOPAS_STATE_SHELL && isHold == 1) {
+        if (mario->GetState() == MARIO_STATE_RUNNING_RIGHT) {
+            this->x = mario_x + 12.0f;
+        }
+        if (mario->GetState() == MARIO_STATE_RUNNING_LEFT) {
+            this->x = mario_x - 12.0f;
+        }
+        this->y = mario_y - 2;
+    }
+    if (mario->getTurtle() == 0 && isHold == 1 && state == KOOPAS_STATE_SHELL) {
+        isHold = 0;
+            SetState(ID_ANI_KOOPAS_SHELL_MOVING);
 
+    }
     if (state == KOOPAS_STATE_SHELL && GetTickCount64() - shell_start > KOOPAS_REVIVE_TIMEOUT)
     {
         SetState(KOOPAS_STATE_WALKING);

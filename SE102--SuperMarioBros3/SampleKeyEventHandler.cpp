@@ -27,6 +27,7 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
     case DIK_3:
         mario->SetLevel(MARIO_LEVEL_TANUKI);
         break;
+
     case DIK_0:
         mario->SetState(MARIO_STATE_DIE);
         break;
@@ -51,6 +52,11 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
     {
     case DIK_S:
         mario->SetState(MARIO_STATE_RELEASE_JUMP);
+        break;
+    case DIK_Q:
+        if (mario->getTurtle()) {
+            mario->setTurtle(0);
+        }
         break;
     case DIK_DOWN:
         mario->SetState(MARIO_STATE_SIT_RELEASE);

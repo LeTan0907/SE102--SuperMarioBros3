@@ -136,7 +136,8 @@ class CMario : public CGameObject
 	BOOLEAN isSitting;
 	float maxVx;
 	float ax;				// acceleration on x 
-	float ay;				// acceleration on y 
+	float ay;			// acceleration on y 
+	int holdKoopas;
 	BOOLEAN isFlying;
 	BOOLEAN isFalling;
 	int level;
@@ -193,6 +194,7 @@ public:
 
 	void SetLevel(int l);
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
-
+	void setTurtle(int i);
+	int getTurtle();
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 };

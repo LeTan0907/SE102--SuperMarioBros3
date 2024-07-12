@@ -54,4 +54,7 @@ public:
     void OnCollisionWithEdgeChecker(LPCOLLISIONEVENT e);
     void OnCollisionWithQuestionBox(LPCOLLISIONEVENT e);
     //CKoopas* CheckNearbyKoopas(CMario* mario);
+    void setisHold() {
+        this->isHold = 1;
+    }
 };
