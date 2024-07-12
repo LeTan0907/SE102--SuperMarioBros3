@@ -15,6 +15,7 @@ colorplatform.txt
 background.txt
 bush.txt
 pipe.txt
+leaf.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -50,6 +51,8 @@ pipe.txt
 #EdgeChecker
 55	490	110
 55	650	110
+#Leaf
+11	180	100
 # QuestionBox
 8	160	100	0
 8	145	100	0

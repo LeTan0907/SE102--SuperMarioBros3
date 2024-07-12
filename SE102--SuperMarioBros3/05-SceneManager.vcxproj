@@ -162,6 +162,7 @@
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="ColorPlatform.cpp" />
     <ClCompile Include="Koopas.cpp" />
+    <ClCompile Include="Leaf.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mario.cpp" />
     <ClCompile Include="PakkkunFlower.cpp" />
@@ -195,6 +196,7 @@
     <ClInclude Include="ColorPlatform.h" />
     <ClInclude Include="KeyEventHandler.h" />
     <ClInclude Include="Koopas.h" />
+    <ClInclude Include="Leaf.h" />
     <ClInclude Include="Mario.h" />
     <ClInclude Include="PakkunFlower.h" />
     <ClInclude Include="Platform.h" />

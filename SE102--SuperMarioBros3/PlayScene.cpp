@@ -10,6 +10,7 @@
 #include "Coin.h"
 #include "Platform.h"
 #include "Koopas.h"
+#include "Leaf.h"
 #include "SampleKeyEventHandler.h"
 #include "ColorPlatform.h"
 #include "QuestionBox.h"
@@ -147,6 +148,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CQuestionBox(x, y, reward);
 		break;
 	}
+	case OBJECT_TYPE_LEAF:obj = new CLeaf(x, y);
 	case OBJECT_TYPE_COIN: obj = new CCoin(x, y); break;
 	case OBJECT_TYPE_KOOPAS: obj = new CKoopas(x, y); break;
 	case OBJECT_TYPE_REDMUSHROOM: obj = new CRedMushroom(x, y); break;
