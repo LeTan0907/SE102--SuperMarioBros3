@@ -80,8 +80,12 @@
 #define ID_ANI_MARIO_SMALL_JUMP_RUN_LEFT 1601
 
 
-#define MARIO_STATE_TANUKI_ATTACK 800
+#define MARIO_STATE_ATTACK 800
+#define MARIO_ATTACK_TIME 300
+#define MARIO_ATTACK_COOLDOWN 500
 
+#define ID_ANI_MARIO_ATTACK_RIGHT 1720
+#define ID_ANI_MARIO_ATTACK_LEFT 1721
 #define MARIO_STATE_TANUKI_FLY    800
 #define MARIO_STATE_TANUKI_FALL   801
 
@@ -140,6 +144,8 @@ class CMario : public CGameObject
 	int holdKoopas;
 	BOOLEAN isFlying;
 	BOOLEAN isFalling;
+	ULONGLONG attack_start;
+	bool isAttacking;
 	int level;
 	int untouchable;
 	ULONGLONG untouchable_start;
@@ -187,7 +193,7 @@ public:
 	{
 		return (state != MARIO_STATE_DIE);
 	}
-
+	void Attack();
 	int IsBlocking() { return (state != MARIO_STATE_DIE && untouchable == 0); }
 
 	void OnNoCollision(DWORD dt);

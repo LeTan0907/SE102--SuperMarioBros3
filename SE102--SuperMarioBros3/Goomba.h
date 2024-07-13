@@ -31,7 +31,7 @@ protected:
 	ULONGLONG fly_start;
 	ULONGLONG flying_time;
 	bool isFlying;
-	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
+	
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects);
 	virtual void Render();
 
@@ -41,6 +41,7 @@ protected:
 
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 public: 	
+	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	CGoomba(float x, float y);
 	virtual void SetState(int state);
 };
