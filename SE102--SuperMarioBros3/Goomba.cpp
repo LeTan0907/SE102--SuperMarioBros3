@@ -67,11 +67,11 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// Handle winged Goomba flying logic
 	if (state == GOOMBA_STATE_WINGED_WALKING || state == GOOMBA_STATE_WINGED_FLY)
 	{
-		if (state == GOOMBA_STATE_WINGED_WALKING && GetTickCount64() - fly_start > 3000)
+		if (state == GOOMBA_STATE_WINGED_WALKING && GetTickCount64() - fly_start > 1000)
 		{
 			SetState(GOOMBA_STATE_WINGED_FLY);
 		}
-		else if (state == GOOMBA_STATE_WINGED_FLY && GetTickCount64() - fly_start > GOOMBA_FLY_DURATION)
+		else if (state == GOOMBA_STATE_WINGED_FLY && GetTickCount64() - fly_start > 1000)
 		{
 			SetState(GOOMBA_STATE_WINGED_WALKING);
 		}
@@ -121,10 +121,12 @@ void CGoomba::SetState(int state)
 		case GOOMBA_STATE_WINGED_WALKING:
 			vx = -GOOMBA_WALKING_SPEED;
 			fly_start = GetTickCount64();
+			ay = GOOMBA_GRAVITY;
 			break;
 		case GOOMBA_STATE_WINGED_FLY:
 			fly_start = GetTickCount64();
 			vy = -GOOMBA_WALKING_SPEED;
+			ay = 0;
 			
 			break;
 	}
