@@ -13,7 +13,7 @@ void CESpawner::Render()
 {
     CAnimations* animations = CAnimations::GetInstance();
     CAnimations::GetInstance()->Get(ID_ANI_SPAWNER)->Render(x, y);
-    RenderBoundingBox();
+   /* RenderBoundingBox();*/
 }
 void CESpawner::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
@@ -40,14 +40,12 @@ void CESpawner::SpawnGoomba()
 
 void CESpawner::SpawnKoopas()
 {
-    CKoopas* koopas1 = new CKoopas(1300, 0);
-    CKoopas* koopas2 = new CKoopas(1350, 0);
-    CKoopas* koopas3 = new CKoopas(1400, 0);
-
+    CKoopas* koopas1 = new CKoopas(1400, 0);
+    CKoopas* koopas2 = new CKoopas(1450, 0);
+    CKoopas* koopas3 = new CKoopas(1500, 0);
     koopas1->SetState(KOOPAS_WINGED_WALKING);
     koopas2->SetState(KOOPAS_WINGED_WALKING);
     koopas3->SetState(KOOPAS_WINGED_WALKING);
-
     CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
     scene->AddObject(koopas1);
     scene->AddObject(koopas2);

@@ -60,6 +60,10 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
     {
         OnCollisionWithQuestionBox(e);
     }
+    if (dynamic_cast<CCBrick*>(e->obj))
+    {
+        OnCollisionWithCBrick(e);
+    }
     if (!e->obj->IsBlocking()) return;
 
     if (e->ny != 0)
@@ -98,12 +102,16 @@ void CKoopas::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 void CKoopas:: OnCollisionWithCBrick(LPCOLLISIONEVENT e)
 {
     CCBrick* brick = dynamic_cast<CCBrick*>(e->obj);
-    if (state = KOOPAS_STATE_SHELL_MOVING)
+    if (state == KOOPAS_STATE_SHELL_MOVING)
     {
         if (e->nx != 0) // nx != 0 means collision from the side
         {
             e->obj->Delete();
         }
+    }
+    else
+    {
+        return;
     }
 }
 void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
