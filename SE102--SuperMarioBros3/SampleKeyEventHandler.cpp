@@ -53,7 +53,7 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
     case DIK_S:
         mario->SetState(MARIO_STATE_RELEASE_JUMP);
         break;
-    case DIK_Q:
+    case DIK_A:    
         if (mario->getTurtle()) {
             mario->setTurtle(0);
         }

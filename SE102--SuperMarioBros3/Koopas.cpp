@@ -52,6 +52,10 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
     {
         OnCollisionWithEdgeChecker(e);
     }
+    if (dynamic_cast<CKoopas*>(e->obj))
+    {
+        OnCollisionWithKoopas(e);
+    }
 
     if (!e->obj->IsBlocking()) return;
 
@@ -62,6 +66,30 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
     else if (e->nx != 0)
     {
         vx = -vx;
+    }
+}
+void CKoopas::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
+{
+    CKoopas* koopa = dynamic_cast<CKoopas*>(e->obj);
+    if (GetState() != KOOPAS_STATE_SHELL_MOVING)
+    {
+        return;
+    }
+    else
+    {
+        if (koopa->GetState() == KOOPAS_WINGED_WALKING)
+        {
+            koopa->SetState(KOOPAS_STATE_WALKING);
+        }
+        if (koopa->GetState() == KOOPAS_STATE_WALKING)
+        {
+            koopa->SetState(KOOPAS_STATE_SHELL);
+        }
+        else if (koopa->GetState() == KOOPAS_STATE_SHELL)
+        {
+            koopa->SetState(KOOPAS_STATE_DIE);
+        }
+
     }
 }
 void CKoopas:: OnCollisionWithCBrick(LPCOLLISIONEVENT e)
@@ -80,7 +108,13 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
     float mario_x, mario_y;
     CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
     mario->GetPosition(mario_x, mario_y);
+    if (!mario->getTurtle()) {
+        if (isHold) {
+            SetState(KOOPAS_STATE_SHELL_MOVING);
+            isHold = 0;
+        }
 
+    }
     vy += ay * dt;
     vx += ax * dt;
 
@@ -103,11 +137,11 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
             SetState(ID_ANI_KOOPAS_SHELL_MOVING);
 
     }
-    if (state == KOOPAS_STATE_SHELL && GetTickCount64() - shell_start > KOOPAS_REVIVE_TIMEOUT)
-    {
-        SetState(KOOPAS_STATE_WALKING);
-        y -= (KOOPAS_BBOX_HEIGHT - KOOPAS_BBOX_HEIGHT_SHELL) / 2; // Reset position to avoid falling through the ground
-    }
+    //if (state == KOOPAS_STATE_SHELL && GetTickCount64() - shell_start > KOOPAS_REVIVE_TIMEOUT)
+    //{
+    //    SetState(KOOPAS_STATE_WALKING);
+    //    y -= (KOOPAS_BBOX_HEIGHT - KOOPAS_BBOX_HEIGHT_SHELL) / 2; // Reset position to avoid falling through the ground
+    //}
     if (state == KOOPAS_WINGED_WALKING)
     {
         if (!isFlying && GetTickCount64() - winged_walk_start > KOOPAS_WINGED_FLY_INTERVAL)
@@ -123,6 +157,14 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
             isFlying = false;
         }
     }
+    if (isHold == 1 && state==KOOPAS_STATE_SHELL)
+    {
+        x = mario_x + 5;
+        y = mario_y - 2;
+    }
+
+
+
     CGameObject::Update(dt, coObjects);
     CCollision::GetInstance()->Process(this, dt, coObjects);
 }

@@ -64,6 +64,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 
+	// Handle winged Goomba flying logic
 	if (state == GOOMBA_STATE_WINGED_WALKING || state == GOOMBA_STATE_WINGED_FLY)
 	{
 		if (state == GOOMBA_STATE_WINGED_WALKING && GetTickCount64() - fly_start > 3000)

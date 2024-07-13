@@ -33,7 +33,7 @@ class CKoopas : public CGameObject
 protected:
     float ax;
     float ay;
-    bool isHold;
+    int isHold;
     ULONGLONG die_start;
     ULONGLONG shell_start;
     ULONGLONG winged_walk_start;
@@ -55,7 +55,8 @@ public:
     void OnCollisionWithQuestionBox(LPCOLLISIONEVENT e);
     void OnCollisionWithCBrick(LPCOLLISIONEVENT e);
     //CKoopas* CheckNearbyKoopas(CMario* mario);
-    void setisHold() {
-        this->isHold = 1;
+    void setisHold(int i) {
+        this->isHold = i;
     }
+    void OnCollisionWithKoopas(LPCOLLISIONEVENT e);
 };

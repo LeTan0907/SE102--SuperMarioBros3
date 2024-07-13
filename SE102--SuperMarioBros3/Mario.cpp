@@ -180,10 +180,10 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 		}
 	}
 
-	else if (e->nx != 0 && koopas->GetState() == KOOPAS_STATE_SHELL)
+	if ((state==MARIO_STATE_RUNNING_LEFT||state==MARIO_STATE_RUNNING_RIGHT) && (koopas->GetState() == KOOPAS_STATE_SHELL))
 	{
-	koopas->SetState(KOOPAS_STATE_SHELL_MOVING);
-	koopas->SetSpeed(nx * KOOPAS_SHELL_SPEED, 0);
+		holdKoopas = 1;
+		koopas->setisHold(1);
 	}
 	else // Mario is hit by Koopas
 	{
@@ -515,14 +515,14 @@ void CMario::Render()
 		aniId = GetAniIdSmall();
 	else if (level == MARIO_LEVEL_TANUKI)
 		aniId = GetAniIdTanuki();
-	if (isAttacking)
+	/*if (isAttacking)
 	{
 		aniId = (nx > 0) ? ID_ANI_MARIO_ATTACK_RIGHT : ID_ANI_MARIO_ATTACK_LEFT;
 	}
-	animations->Get(aniId)->Render(x, y);
+	*/
 
 	// RenderBoundingBox();
-
+	animations->Get(aniId)->Render(x, y);
 	DebugOutTitle(L"Coins: %d", coin);
 }
 
@@ -711,30 +711,30 @@ void CMario::setTurtle(int i) {
 int CMario::getTurtle() {
 	return holdKoopas;
 }
-void CMario::Attack()
-{
-	if (isAttacking && GetTickCount64() - attack_start > MARIO_ATTACK_TIME)
-	{
-		isAttacking = false;
-	}
-
-	if (isAttacking)
-	{
-		for (auto& obj : *coObjects)
-		{
-			if (dynamic_cast<CGoomba*>(obj))
-			{
-				CGoomba* goomba = dynamic_cast<CGoomba*>(obj);
-				float l, t, r, b;
-				GetBoundingBox(l, t, r, b);
-				float gl, gt, gr, gb;
-				goomba->GetBoundingBox(gl, gt, gr, gb);
-				if (gl < r && gr > l && gt < b && gb > t)
-				{
-					goomba->SetState(GOOMBA_STATE_DIE);
-				}
-			}
-			// Add similar checks for other enemy types
-		}
-	}
-}
+//void CMario::Attack()
+//{
+//	if (isAttacking && GetTickCount64() - attack_start > MARIO_ATTACK_TIME)
+//	{
+//		isAttacking = false;
+//	}
+//
+//	if (isAttacking)
+//	{
+//		for (auto& obj : *coObjects)
+//		{
+//			if (dynamic_cast<CGoomba*>(obj))
+//			{
+//				CGoomba* goomba = dynamic_cast<CGoomba*>(obj);
+//				float l, t, r, b;
+//				GetBoundingBox(l, t, r, b);
+//				float gl, gt, gr, gb;
+//				goomba->GetBoundingBox(gl, gt, gr, gb);
+//				if (gl < r && gr > l && gt < b && gb > t)
+//				{
+//					goomba->SetState(GOOMBA_STATE_DIE);
+//				}
+//			}
+//			// Add similar checks for other enemy types
+//		}
+//	}
+//}
