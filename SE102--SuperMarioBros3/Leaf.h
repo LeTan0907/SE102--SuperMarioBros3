@@ -16,6 +16,7 @@ class CLeaf : public CGameObject
 protected:
     float ax;
     float ay;
+    float x_temp;
     ULONGLONG lastDirectionChangeTime;
 public:
     CLeaf(float x, float y);

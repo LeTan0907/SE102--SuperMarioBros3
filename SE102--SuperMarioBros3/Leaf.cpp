@@ -5,6 +5,7 @@ CLeaf::CLeaf(float x, float y) : CGameObject(x, y)
 {
     this->ax = 0;
     this->ay = LEAF_GRAVITY;
+    x_temp = x;
     this->vx = LEAF_HORIZONTAL_SPEED;
     this->lastDirectionChangeTime = GetTickCount64();
 }
@@ -29,18 +30,17 @@ void CLeaf::OnCollisionWith(LPCOLLISIONEVENT e)
 
 void CLeaf::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-    vy += ay * dt;
-
-    // Change direction at regular intervals
-    if (GetTickCount64() - lastDirectionChangeTime > LEAF_DIRECTION_CHANGE_INTERVAL)
+    ay = LEAF_GRAVITY*10;
+    if (x < x_temp)
     {
-        vx = -vx;  // Reverse horizontal direction
-        lastDirectionChangeTime = GetTickCount64();
+        vx = LEAF_HORIZONTAL_SPEED;
     }
-
-    x += vx * dt;
-    y += vy * dt;
-
+    if (x - x_temp > 90)
+    {
+        vx = -LEAF_HORIZONTAL_SPEED;
+    }
+    x += vx*1000;
+    y += ay * dt;
     CGameObject::Update(dt, coObjects);
     CCollision::GetInstance()->Process(this, dt, coObjects);
 }

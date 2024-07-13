@@ -124,7 +124,8 @@ void CGoomba::SetState(int state)
 			break;
 		case GOOMBA_STATE_WINGED_FLY:
 			fly_start = GetTickCount64();
-			vx = -GOOMBA_WALKING_SPEED;
+			vy = -GOOMBA_WALKING_SPEED;
+			
 			break;
 	}
 }

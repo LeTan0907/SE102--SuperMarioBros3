@@ -56,7 +56,10 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
     {
         OnCollisionWithKoopas(e);
     }
-
+    if (dynamic_cast<CQuestionBox*>(e->obj))
+    {
+        OnCollisionWithQuestionBox(e);
+    }
     if (!e->obj->IsBlocking()) return;
 
     if (e->ny != 0)
